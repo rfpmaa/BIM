@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - BIM Learn</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .profile-container {
+            background: white;
+            border-radius: 12px;
+            padding: 32px 40px 40px;
+            border: 1px solid #e2e8f0;
+            max-width: 760px;
+            margin: 30px auto;
+        }
+        .profile-intro {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .profile-intro h3 {
+            color: #1e293b;
+            margin: 0 0 6px;
+            font-size: 20px;
+        }
+        .profile-intro p {
+            color: #64748b;
+            font-size: 13px;
+            margin: 0;
+        }
+        .profile-pic-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            margin: 0 auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: #94a3b8;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid #4F46E5;
+            transition: 0.3s;
+        }
+        .profile-pic-large:hover {
+            border-color: #3730a3;
+        }
+        .profile-pic-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        .profile-pic-large .overlay {
+            position: absolute;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            width: 100%;
+            font-size: 12px;
+            color: white;
+            padding: 5px 0;
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .profile-pic-large:hover .overlay {
+            opacity: 1;
+        }
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+        .form-section-title {
+            color: #1e293b;
+            font-size: 15px;
+            margin: 26px 0 15px;
+            padding-bottom: 9px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+            background: white;
+        }
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        .btn-save {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .btn-logout {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 15px;
+        }
+        @media (max-width: 640px) {
+            .profile-container {
+                padding: 25px 20px 30px;
+                margin-top: 20px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR KIRI -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-cube"></i>
+            <span>BIM Learn</span>
+        </div>
+        <ul>
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
+            <li><a href="modul.html"><i class="fa-solid fa-book"></i> Modul</a></li>
+            <li><a href="video.html"><i class="fa-solid fa-circle-play"></i> Video</a></li>
+            <li><a href="simulasi.html"><i class="fa-solid fa-cubes"></i> Simulasi 3D</a></li>
+            <li><a href="latihan.html"><i class="fa-solid fa-clipboard-check"></i> Latihan</a></li>
+            <li><a href="progres.html"><i class="fa-solid fa-chart-line"></i> Progress</a></li>
+            <li><a href="profil.html" class="active"> <i class="fa-solid fa-user"></i> Profil</a></li>
+        </ul>
+    </div>
+    
+    <!-- KONTEN UTAMA -->
+    <div class="main-content">
+        
+        <!-- Header Atas -->
+        <div class="top-header">
+            <div class="greeting">
+                <h2>Profil Pengguna</h2>
+                <p>Atur informasi personal dan foto profil Anda di sini.</p>
+            </div>
+            <div class="user-menu">
+                <button id="btn-login-header" onclick="window.location.href='login.html'" style="background: #4F46E5; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: none;">Login / Sign In</button>
+            </div>
+        </div>
+
+        <!-- Area Profil -->
+        <div class="profile-container">
+            <div class="profile-intro">
+                <h3>Data Siswa / Siswi</h3>
+                <p>Lengkapi informasi diri untuk membuat profil belajar Anda.</p>
+            </div>
+            
+            <!-- Input File Tersembunyi -->
+            <input type="file" id="input-foto" accept="image/*" style="display: none;" onchange="previewDanSimpanFoto(event)">
+            
+            <div class="profile-pic-large" onclick="document.getElementById('input-foto').click()">
+                <i class="fa-solid fa-user" id="icon-profil-default"></i>
+                <img id="img-profil-preview" src="" alt="Foto Profil">
+                <div class="overlay">Ubah Foto</div>
+            </div>
+
+            <h4 class="form-section-title">Identitas Siswa</h4>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="input-nama">Nama Lengkap</label>
+                    <input type="text" id="input-nama" placeholder="Masukkan nama lengkap">
+                </div>
+                <div class="form-group">
+                    <label for="input-nis">NIS / NISN</label>
+                    <input type="text" id="input-nis" placeholder="Masukkan NIS atau NISN">
+                </div>
+                <div class="form-group">
+                    <label for="input-kelas">Kelas</label>
+                    <input type="text" id="input-kelas" placeholder="Contoh: XI RPL 1">
+                </div>
+                <div class="form-group">
+                    <label for="input-jurusan">Jurusan</label>
+                    <input type="text" id="input-jurusan" placeholder="Contoh: Rekayasa Perangkat Lunak">
+                </div>
+                <div class="form-group">
+                    <label for="input-jk">Jenis Kelamin</label>
+                    <select id="input-jk">
+                        <option value="">Pilih jenis kelamin</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="input-sekolah">Nama Sekolah</label>
+                    <input type="text" id="input-sekolah" placeholder="Nama SMK">
+                </div>
+            </div>
+
+            <h4 class="form-section-title">Kontak</h4>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="input-email">Alamat Email</label>
+                    <input type="email" id="input-email" placeholder="contoh@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="input-telepon">Nomor Telepon</label>
+                    <input type="tel" id="input-telepon" placeholder="08xxxxxxxxxx">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="input-alamat">Alamat</label>
+                <textarea id="input-alamat" placeholder="Masukkan alamat tempat tinggal"></textarea>
+            </div>
+
+            <button class="btn-save" onclick="simpanProfil()">Simpan Perubahan</button>
+            <button class="btn-logout" onclick="simulasiLogout()">Keluar / Logout</button>
+            
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+</html>

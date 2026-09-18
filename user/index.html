@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIM Learn - Beranda</title>
+    <!-- Link ke CSS -->
+    <link rel="stylesheet" href="../style.css">
+    <!-- Link FontAwesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Google (Inter) agar mirip desain aslinya -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- SIDEBAR KIRI -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-cube"></i>
+            <span>BIM Learn</span>
+        </div>
+        <ul>
+            <!-- Perhatikan bagian href di bawah ini sudah diganti -->
+            <li><a href="index.html" class="active"><i class="fa-solid fa-house"></i> Beranda</a></li>
+            <li><a href="modul.html"><i class="fa-solid fa-book"></i> Modul</a></li>
+            <li><a href="video.html"><i class="fa-solid fa-circle-play"></i> Video</a></li>
+            <li><a href="simulasi.html"><i class="fa-solid fa-cubes"></i> Simulasi 3D</a></li>
+            <li><a href="latihan.html"><i class="fa-solid fa-clipboard-check"></i> Latihan</a></li>
+            <li><a href="progres.html"><i class="fa-solid fa-chart-line"></i> Progress</a></li>
+            <li><a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a></li>
+        </ul>
+    </div>
+
+    <!-- KONTEN UTAMA -->
+    <div class="main-content">
+        <!-- Header Atas -->
+        <div class="top-header">
+            <div class="greeting">
+                <h2 id="greeting-user">Selamat Datang, Peserta!</h2>
+                <p>Mulai perjalananmu memahami BIM dari dasar hingga praktik.</p>
+            </div>
+            <div class="user-menu">
+                
+                <!-- 1. Tombol Login (Akan disembunyikan JS jika sudah login) -->
+                <button id="btn-login-header" onclick="window.location.href='login.html'" style="background: #4F46E5; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: none;">
+                    Login / Sign In
+                </button>
+                
+                <!-- 2. Ikon Profil (Akan disembunyikan JS jika belum login) -->
+                <span id="nama-profil-header" class="profile-name-header"></span>
+                <div id="ikon-profil-header" class="profile-pic" onclick="window.location.href='profil.html'" title="Buka profil" aria-label="Buka profil" style="display: none;">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Banner Hero Utama -->
+        <div class="hero-banner">
+            <div class="hero-text">
+                <h1>BIM</h1>
+                <h3>Building Information Modeling</h3>
+                <p>Satu model, banyak kemungkinan.</p>
+                <a href="modul.html" class="btn-primary">Mulai Belajar <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="hero-image">
+                <!-- Ganti src di bawah dengan link/path gambar bangunan aslinya jika kamu punya -->
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=600&auto=format&fit=crop" alt="BIM Building">
+            </div>
+        </div>
+
+        <!-- Bagian Modul Pembelajaran -->
+        <div class="module-section">
+            <h3 class="section-title">Modul Pembelajaran</h3>
+            <div class="cards-grid">
+                
+                
+            <!-- Card 1 -->
+            <div class="card">
+                <div class="icon-box icon-green"><i class="fa-solid fa-book-open"></i></div>
+                <h4>1. Pengenalan BIM</h4>
+                <p>Dasar, konsep, dan manfaat BIM</p>
+                <div class="progress-container">
+                    <div class="progress-bar bar-green" id="bar-modul-1" style="width: 0%;"></div>
+                </div>
+                <div class="progress-text text-green" id="text-modul-1">0%</div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card">
+                <div class="icon-box icon-blue"><i class="fa-solid fa-cube"></i></div>
+                <h4>2. Pemodelan 3D</h4>
+                <p>Praktik di Revit</p>
+                <div class="progress-container">
+                    <div class="progress-bar bar-blue" id="bar-modul-2" style="width: 0%;"></div>
+                </div>
+                <div class="progress-text text-blue" id="text-modul-2">0%</div>
+            </div>
+
+                <!-- Card 3 -->
+                <div class="card">
+                    <div class="icon-box icon-blue">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <h4>3. Kolaborasi & BIM 360</h4>
+                    <p>Kerja tim dalam proyek</p>
+                    <div class="progress-container">
+                        <div class="progress-bar bar-blue" id="bar-modul-3" style="width: 0%;"></div>
+                    </div>
+                    <div class="progress-text text-blue" id="text-modul-3">0%</div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="card">
+                    <div class="icon-box icon-gray">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h4>4. Manajemen Proyek</h4>
+                    <p>4D, 5D, dan visualisasi</p>
+                    <div class="progress-container">
+                        <div class="progress-bar bar-gray" id="bar-modul-4" style="width: 0%;"></div>
+                    </div>
+                        <div class="progress-text text-gray" id="text-modul-4">0%</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="../script.js"></script>
+</html>

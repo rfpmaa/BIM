@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan - BIM Learn</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .quiz-header { margin-bottom: 25px; }
+        .quiz-header h1 { color: #1e293b; font-size: 28px; margin: 0 0 8px; }
+        .quiz-header p { color: #64748b; font-size: 14px; margin: 0; }
+        .quiz-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 25px; max-width: 760px; }
+        .question { border-bottom: 1px solid #e2e8f0; padding: 0 0 22px; margin-bottom: 22px; }
+        .question:last-of-type { border-bottom: 0; }
+        .question h2 { color: #1e293b; font-size: 16px; margin: 0 0 14px; }
+        .answer { display: block; color: #475569; font-size: 13px; margin: 10px 0; cursor: pointer; }
+        .answer input { margin-right: 8px; accent-color: #2563eb; }
+        .quiz-button { background: #2563eb; color: white; border: 0; border-radius: 8px; padding: 11px 16px; cursor: pointer; font-weight: 600; }
+        #quiz-result { color: #1d4ed8; font-size: 14px; font-weight: 600; margin-top: 18px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar"><div class="logo"><i class="fa-solid fa-cube"></i><span>BIM Learn</span></div><ul>
+        <li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li><li><a href="modul.html"><i class="fa-solid fa-book"></i> Modul</a></li><li><a href="video.html"><i class="fa-solid fa-circle-play"></i> Video</a></li><li><a href="simulasi.html"><i class="fa-solid fa-cubes"></i> Simulasi 3D</a></li><li><a href="latihan.html" class="active"><i class="fa-solid fa-clipboard-check"></i> Latihan</a></li><li><a href="progres.html"><i class="fa-solid fa-chart-line"></i> Progress</a></li><li><a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a></li>
+    </ul></div>
+    <main class="main-content"><div class="quiz-header"><h1>Latihan BIM</h1><p>Uji pemahamanmu setelah mempelajari modul.</p></div><form class="quiz-card" id="quiz-form">
+        <div class="question"><h2>1. BIM digunakan terutama untuk...</h2><label class="answer"><input type="radio" name="q1" value="a"> Mengelola informasi proyek dalam satu alur kerja</label><label class="answer"><input type="radio" name="q1" value="b"> Menggantikan seluruh tenaga kerja</label></div>
+        <div class="question"><h2>2. BIM 4D berkaitan dengan...</h2><label class="answer"><input type="radio" name="q2" value="a"> Estimasi biaya</label><label class="answer"><input type="radio" name="q2" value="b"> Waktu dan jadwal proyek</label></div>
+        <div class="question"><h2>3. Kolaborasi BIM membantu tim untuk...</h2><label class="answer"><input type="radio" name="q3" value="a"> Berbagi dan meninjau informasi model</label><label class="answer"><input type="radio" name="q3" value="b"> Menghapus kebutuhan koordinasi</label></div>
+        <button class="quiz-button" type="submit"><i class="fa-solid fa-check"></i> Periksa Jawaban</button><div id="quiz-result"></div>
+    </form></main>
+    <script src="../script.js"></script><script>
+        document.getElementById("quiz-form").addEventListener("submit", function(event) { event.preventDefault(); let score = 0; if (document.querySelector('input[name="q1"]:checked')?.value === "a") score++; if (document.querySelector('input[name="q2"]:checked')?.value === "b") score++; if (document.querySelector('input[name="q3"]:checked')?.value === "a") score++; document.getElementById("quiz-result").textContent = "Nilai latihan: " + score + "/3"; });
+    </script>
+</body>
+</html>

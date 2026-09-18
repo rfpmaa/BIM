@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul Pembelajaran - BIM Learn</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .module-header { display: flex; justify-content: space-between; align-items: end; gap: 25px; margin-bottom: 28px; }
+        .module-header h1 { color: #1e293b; font-size: 28px; margin: 0 0 8px; }
+        .module-header p { color: #64748b; font-size: 14px; margin: 0; }
+        .module-summary { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 16px; min-width: 150px; text-align: center; }
+        .module-summary strong { display: block; font-size: 22px; }
+        .module-summary span { font-size: 12px; }
+        .module-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+        .module-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04); }
+        .module-card-top { display: flex; align-items: flex-start; gap: 14px; padding: 22px 22px 15px; }
+        .module-number { width: 42px; height: 42px; flex: 0 0 42px; display: flex; align-items: center; justify-content: center; border-radius: 11px; color: white; font-size: 18px; font-weight: 700; }
+        .module-card:nth-child(1) .module-number { background: #10b981; }
+        .module-card:nth-child(2) .module-number { background: #2563eb; }
+        .module-card:nth-child(3) .module-number { background: #7c3aed; }
+        .module-card:nth-child(4) .module-number { background: #f59e0b; }
+        .module-card h2 { color: #1e293b; font-size: 17px; margin: 1px 0 6px; }
+        .module-card .description { color: #64748b; font-size: 13px; line-height: 1.5; margin: 0; }
+        .module-meta { display: flex; gap: 16px; padding: 0 22px 17px; color: #64748b; font-size: 12px; }
+        .module-meta span { display: inline-flex; align-items: center; gap: 6px; }
+        .module-content { border-top: 1px solid #f1f5f9; padding: 0 22px; }
+        .module-content summary { cursor: pointer; color: #334155; font-size: 13px; font-weight: 600; padding: 15px 0; list-style: none; display: flex; justify-content: space-between; }
+        .module-content summary::-webkit-details-marker { display: none; }
+        .module-content summary::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: #94a3b8; }
+        .module-content[open] summary::after { content: '\f077'; }
+        .lesson-list { list-style: none; border-top: 1px solid #f1f5f9; padding: 12px 0 5px; margin: 0; }
+        .lesson-list li { display: flex; align-items: center; gap: 9px; color: #64748b; font-size: 13px; margin-bottom: 11px; }
+        .lesson-list i { color: #2563eb; width: 16px; text-align: center; }
+        .module-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #f8fafc; padding: 15px 22px; }
+        .module-progress { flex: 1; }
+        .module-progress-label { display: flex; justify-content: space-between; color: #64748b; font-size: 11px; margin-bottom: 6px; }
+        .module-progress-bar { height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+        .module-progress-fill { height: 100%; background: #2563eb; border-radius: inherit; width: 0; }
+        .complete-btn { border: 0; border-radius: 7px; background: #2563eb; color: white; padding: 9px 12px; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap; }
+        .complete-btn:hover { background: #1d4ed8; }
+        @media (max-width: 760px) {
+            .module-header { align-items: flex-start; flex-direction: column; }
+            .module-grid { grid-template-columns: 1fr; }
+            .module-summary { width: 100%; box-sizing: border-box; }
+        }
+        @media (max-width: 560px) {
+            .module-card-top { padding: 18px 16px 13px; }
+            .module-meta, .module-content { padding-left: 16px; padding-right: 16px; }
+            .module-footer { padding-left: 16px; padding-right: 16px; align-items: stretch; flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR KIRI -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-cube"></i>
+            <span>BIM Learn</span>
+        </div>
+        <ul>
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
+            <li><a href="modul.html" class="active"><i class="fa-solid fa-book"></i> Modul</a></li>
+            <li><a href="video.html"><i class="fa-solid fa-circle-play"></i> Video</a></li>
+            <li><a href="simulasi.html"><i class="fa-solid fa-cubes"></i> Simulasi 3D</a></li>
+            <li><a href="latihan.html"><i class="fa-solid fa-clipboard-check"></i> Latihan</a></li>
+            <li><a href="progres.html"><i class="fa-solid fa-chart-line"></i> Progress</a></li>
+            <!-- Cek Login di menu profil -->
+            <li><a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a></li>
+        </ul>
+    </div>
+    
+    <!-- KONTEN UTAMA -->
+    <div class="main-content">
+        <div class="module-header">
+            <div>
+                <h1>Modul Pembelajaran</h1>
+                <p>Pelajari BIM secara bertahap dari konsep dasar hingga manajemen proyek.</p>
+            </div>
+            <div class="module-summary">
+                <strong>4</strong>
+                <span>Modul tersedia</span>
+            </div>
+        </div>
+
+        <div class="module-grid">
+            <article class="module-card" id="modul-1">
+                <div class="module-card-top">
+                    <div class="module-number">01</div>
+                    <div>
+                        <h2>1. Pengenalan BIM</h2>
+                        <p class="description">Dasar, konsep, dan manfaat BIM untuk alur kerja konstruksi modern.</p>
+                    </div>
+                </div>
+                <div class="module-meta">
+                    <span><i class="fa-regular fa-clock"></i> 45 menit</span>
+                    <span><i class="fa-solid fa-signal"></i> Pemula</span>
+                </div>
+                <details class="module-content" open>
+                    <summary>Materi yang dipelajari</summary>
+                    <ul class="lesson-list">
+                        <li><i class="fa-solid fa-circle-play"></i> Apa itu Building Information Modeling?</li>
+                        <li><i class="fa-solid fa-file-lines"></i> Manfaat BIM dalam proyek</li>
+                        <li><i class="fa-solid fa-list-check"></i> Alur kerja dan istilah dasar BIM</li>
+                    </ul>
+                </details>
+                <div class="module-footer">
+                    <div class="module-progress">
+                        <div class="module-progress-label"><span>Progress</span><span id="module-progress-text-1">0%</span></div>
+                        <div class="module-progress-bar"><div class="module-progress-fill" id="module-progress-bar-1"></div></div>
+                    </div>
+                    <button class="complete-btn" onclick="selesaiModul(1)"><i class="fa-solid fa-check"></i> Selesai</button>
+                </div>
+            </article>
+
+            <article class="module-card" id="modul-2">
+                <div class="module-card-top">
+                    <div class="module-number">02</div>
+                    <div>
+                        <h2>2. Pemodelan 3D</h2>
+                        <p class="description">Praktik membuat model bangunan tiga dimensi menggunakan Revit.</p>
+                    </div>
+                </div>
+                <div class="module-meta">
+                    <span><i class="fa-regular fa-clock"></i> 90 menit</span>
+                    <span><i class="fa-solid fa-signal"></i> Menengah</span>
+                </div>
+                <details class="module-content">
+                    <summary>Materi yang dipelajari</summary>
+                    <ul class="lesson-list">
+                        <li><i class="fa-solid fa-cube"></i> Mengenal antarmuka Revit</li>
+                        <li><i class="fa-solid fa-ruler-combined"></i> Membuat elemen arsitektur</li>
+                        <li><i class="fa-solid fa-layer-group"></i> Mengatur level dan tampilan</li>
+                    </ul>
+                </details>
+                <div class="module-footer">
+                    <div class="module-progress">
+                        <div class="module-progress-label"><span>Progress</span><span id="module-progress-text-2">0%</span></div>
+                        <div class="module-progress-bar"><div class="module-progress-fill" id="module-progress-bar-2"></div></div>
+                    </div>
+                    <button class="complete-btn" onclick="selesaiModul(2)"><i class="fa-solid fa-check"></i> Selesai</button>
+                </div>
+            </article>
+
+            <article class="module-card" id="modul-3">
+                <div class="module-card-top">
+                    <div class="module-number">03</div>
+                    <div>
+                        <h2>3. Kolaborasi &amp; BIM 360</h2>
+                        <p class="description">Kerja tim dalam proyek dengan pembagian informasi yang terkoordinasi.</p>
+                    </div>
+                </div>
+                <div class="module-meta">
+                    <span><i class="fa-regular fa-clock"></i> 60 menit</span>
+                    <span><i class="fa-solid fa-signal"></i> Menengah</span>
+                </div>
+                <details class="module-content">
+                    <summary>Materi yang dipelajari</summary>
+                    <ul class="lesson-list">
+                        <li><i class="fa-solid fa-users"></i> Peran anggota tim BIM</li>
+                        <li><i class="fa-solid fa-cloud"></i> Berbagi model melalui cloud</li>
+                        <li><i class="fa-solid fa-comments"></i> Koordinasi dan review model</li>
+                    </ul>
+                </details>
+                <div class="module-footer">
+                    <div class="module-progress">
+                        <div class="module-progress-label"><span>Progress</span><span id="module-progress-text-3">0%</span></div>
+                        <div class="module-progress-bar"><div class="module-progress-fill" id="module-progress-bar-3"></div></div>
+                    </div>
+                    <button class="complete-btn" onclick="selesaiModul(3)"><i class="fa-solid fa-check"></i> Selesai</button>
+                </div>
+            </article>
+
+            <article class="module-card" id="modul-4">
+                <div class="module-card-top">
+                    <div class="module-number">04</div>
+                    <div>
+                        <h2>4. Manajemen Proyek</h2>
+                        <p class="description">Memahami 4D, 5D, dan visualisasi untuk membantu pengambilan keputusan.</p>
+                    </div>
+                </div>
+                <div class="module-meta">
+                    <span><i class="fa-regular fa-clock"></i> 75 menit</span>
+                    <span><i class="fa-solid fa-signal"></i> Lanjutan</span>
+                </div>
+                <details class="module-content">
+                    <summary>Materi yang dipelajari</summary>
+                    <ul class="lesson-list">
+                        <li><i class="fa-solid fa-calendar-days"></i> Simulasi waktu dengan BIM 4D</li>
+                        <li><i class="fa-solid fa-coins"></i> Estimasi biaya dengan BIM 5D</li>
+                        <li><i class="fa-solid fa-chart-line"></i> Visualisasi dan laporan proyek</li>
+                    </ul>
+                </details>
+                <div class="module-footer">
+                    <div class="module-progress">
+                        <div class="module-progress-label"><span>Progress</span><span id="module-progress-text-4">0%</span></div>
+                        <div class="module-progress-bar"><div class="module-progress-fill" id="module-progress-bar-4"></div></div>
+                    </div>
+                    <button class="complete-btn" onclick="selesaiModul(4)"><i class="fa-solid fa-check"></i> Selesai</button>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <!-- Menghubungkan ke JavaScript -->
+    <script src="../script.js"></script>
+</body>
+</html>
