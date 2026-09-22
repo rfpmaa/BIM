@@ -28,7 +28,7 @@ if ($checkStmt->get_result()->num_rows > 0) {
 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
 // Simpan ke database
-$stmt = $conn->prepare("INSERT INTO user (nama, email, password) VALUES (?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO user (nama, email, password, role) VALUES (?, ?, ?, 'siswa')");
 $stmt->bind_param("sss", $nama, $email, $passwordHash);
 
 if ($stmt->execute()) {

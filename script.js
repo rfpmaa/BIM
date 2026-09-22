@@ -77,16 +77,36 @@ function getProgressKey(nomorModul) {
     return "progres_modul_" + userId + "_" + nomorModul;
 }
 
-function selesaiModul(nomorModul) {
+async function selesaiModul(nomorModul) {
     localStorage.setItem(getProgressKey(nomorModul), "100");
-    fetch("../progress_api.php", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ modul: nomorModul, progress: 100 })
-    });
-    updateProgressDisplays();
-    tampilkanNotifikasi("Modul " + nomorModul + " telah diselesaikan. Progress Anda sudah diperbarui.", "success");
+    try {
+        let sessionResponse = await fetch("../session_status.php?t=" + Date.now(), {
+            credentials: "same-origin",
+            cache: "no-store"
+        });
+        let sessionResult = await sessionResponse.json();
+        if (!sessionResult.authenticated || sessionResult.data.role !== "siswa") {
+            throw new Error("Sesi siswa tidak ditemukan. Silakan login ulang.");
+        }
+
+        let response = await fetch("../progress_api.php?t=" + Date.now(), {
+            method: "POST",
+            credentials: "same-origin",
+            cache: "no-store",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ modul: nomorModul, progress: 100 })
+        });
+        let result = await response.json();
+        if (!response.ok || result.status !== "success") {
+            throw new Error(result.message || "Progress gagal disimpan.");
+        }
+        updateProgressDisplays();
+        tampilkanNotifikasi("Modul " + nomorModul + " tersimpan untuk akun " + sessionResult.data.email + ".", "success");
+    } catch (error) {
+        localStorage.removeItem(getProgressKey(nomorModul));
+        updateProgressDisplays();
+        tampilkanNotifikasi(error.message || "Progress gagal disimpan.", "error");
+    }
 }
 
 function updateProgressDisplays() {
@@ -141,19 +161,6 @@ function previewDanSimpanFoto(event) {
 }
 
 function simpanProfil() {
-    let profileFields = {
-        namaUser: "input-nama",
-        emailUser: "input-email",
-        nisUser: "input-nis",
-        kelasUser: "input-kelas",
-        jurusanUser: "input-jurusan",
-        jenisKelaminUser: "input-jk",
-        sekolahUser: "input-sekolah",
-        teleponUser: "input-telepon",
-        alamatUser: "input-alamat"
-    };
-
-    let formData = new FormData();
     let apiFields = {
         nama: "input-nama",
         email: "input-email",
@@ -166,12 +173,15 @@ function simpanProfil() {
         alamat: "input-alamat"
     };
 
-    Object.entries(profileFields).forEach(function([storageKey, inputId]) {
-        localStorage.setItem(storageKey, document.getElementById(inputId).value.trim());
-    });
+    let formData = new FormData();
+
     Object.entries(apiFields).forEach(function([fieldName, inputId]) {
-        formData.append(fieldName, document.getElementById(inputId).value.trim());
+        let elem = document.getElementById(inputId);
+        let val = elem ? elem.value.trim() : "";
+        formData.append(fieldName, val);
+        localStorage.setItem(fieldName + "User", val);
     });
+    
     formData.append("foto", localStorage.getItem("fotoProfil") || "");
 
     fetch("../profil_api.php", { method: "POST", body: formData, credentials: "same-origin" })
@@ -260,10 +270,13 @@ function sinkronkanProfilDariServer() {
 
 function sinkronkanProgressDariServer() {
     if (window.location.pathname.endsWith("login.html")) return;
-    fetch("../progress_api.php", { credentials: "same-origin" })
+    fetch("../progress_api.php?t=" + Date.now(), { credentials: "same-origin", cache: "no-store" })
         .then(response => response.json())
         .then(result => {
             if (result.status !== "success") return;
+            for (let modul = 1; modul <= 4; modul++) {
+                localStorage.setItem(getProgressKey(modul), "0");
+            }
             result.data.forEach(function(item) {
                 localStorage.setItem(getProgressKey(item.modul), item.progress);
             });

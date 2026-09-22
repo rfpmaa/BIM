@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9; /* Background abu-abu kebiruan lembut */
+            background-color: #f1f5f9;
             height: 100vh;
             display: flex;
             align-items: center;
@@ -142,7 +142,7 @@
             font-size: 13px;
             font-weight: 500;
             text-align: center;
-            display: none; /* Sembunyikan dari awal */
+            display: none;
         }
         .notif-error {
             background-color: #fee2e2;
@@ -159,27 +159,26 @@
 <body>
 
     <!-- KOTAK LOGIN -->
-    <div class="login-card" id="box-login">
+    <main class="login-card" id="box-login">
         <div class="logo-header">
-            <i class="fa-solid fa-cube"></i>
+            <i class="fa-solid fa-cube" aria-hidden="true"></i>
             <h2>BIM Learn</h2>
             <p>Silakan masuk ke akun Anda</p>
         </div>
 
-        <div id="notif-login" class="notif-box"></div> 
+        <div id="notif-login" class="notif-box" aria-live="polite"></div> 
 
-        
         <form onsubmit="prosesLogin(event)">
             <div class="form-group">
-                <label><i class="fa-solid fa-envelope"></i> Alamat Email</label>
+                <label for="login-email"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Alamat Email</label>
                 <input type="email" id="login-email" placeholder="Masukkan email" autocomplete="email" required>
             </div>
             <div class="form-group">
-                <label><i class="fa-solid fa-lock"></i> Password</label>
+                <label for="login-password"><i class="fa-solid fa-lock" aria-hidden="true"></i> Password</label>
                 <div class="password-wrapper">
                     <input type="password" id="login-password" placeholder="Masukkan password" autocomplete="current-password" required>
                     <button type="button" class="toggle-password" onclick="togglePassword('login-password', this)" aria-label="Tampilkan password" title="Tampilkan password">
-                        <i class="fa-solid fa-eye"></i>
+                        <i class="fa-solid fa-eye" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -190,43 +189,42 @@
             Belum punya akun? <a onclick="toggleForm()">Daftar di sini</a>
         </div>
         <div class="admin-link"><a href="../admin/login.html">Masuk sebagai guru</a></div>
-    </div>
+    </main>
 
-    <!-- KOTAK REGISTER (Disembunyikan secara default) -->
-    <div class="login-card" id="box-register" style="display: none;">
+    <!-- KOTAK REGISTER -->
+    <main class="login-card" id="box-register" style="display: none;">
         <div class="logo-header">
-            <i class="fa-solid fa-user-plus"></i>
+            <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
             <h2>Buat Akun</h2>
             <p>Mulai perjalanan BIM Anda</p>
         </div>
 
-        <div id="notif-register" class="notif-box"></div>
+        <div id="notif-register" class="notif-box" aria-live="polite"></div>
 
-        
         <form onsubmit="prosesRegister(event)">
             <div class="form-group">
-                <label><i class="fa-solid fa-user"></i> Nama Lengkap</label>
+                <label for="reg-nama"><i class="fa-solid fa-user" aria-hidden="true"></i> Nama Lengkap</label>
                 <input type="text" id="reg-nama" placeholder="Masukkan nama" autocomplete="name" minlength="2" required>
             </div>
             <div class="form-group">
-                <label><i class="fa-solid fa-envelope"></i> Alamat Email</label>
+                <label for="reg-email"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Alamat Email</label>
                 <input type="email" id="reg-email" placeholder="Masukkan email" autocomplete="email" required>
             </div>
             <div class="form-group">
-                <label><i class="fa-solid fa-lock"></i> Password</label>
+                <label for="reg-password"><i class="fa-solid fa-lock" aria-hidden="true"></i> Password</label>
                 <div class="password-wrapper">
                     <input type="password" id="reg-password" placeholder="Buat password" autocomplete="new-password" minlength="8" required>
                     <button type="button" class="toggle-password" onclick="togglePassword('reg-password', this)" aria-label="Tampilkan password" title="Tampilkan password">
-                        <i class="fa-solid fa-eye"></i>
+                        <i class="fa-solid fa-eye" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
             <div class="form-group">
-                <label for="reg-password-confirm"><i class="fa-solid fa-lock"></i> Konfirmasi Password</label>
+                <label for="reg-password-confirm"><i class="fa-solid fa-lock" aria-hidden="true"></i> Konfirmasi Password</label>
                 <div class="password-wrapper">
                     <input type="password" id="reg-password-confirm" placeholder="Ulangi password" autocomplete="new-password" minlength="8" required>
                     <button type="button" class="toggle-password" onclick="togglePassword('reg-password-confirm', this)" aria-label="Tampilkan password" title="Tampilkan password">
-                        <i class="fa-solid fa-eye"></i>
+                        <i class="fa-solid fa-eye" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -236,120 +234,117 @@
         <div class="toggle-text">
             Sudah punya akun? <a onclick="toggleForm()">Masuk di sini</a>
         </div>
-    </div>
+    </main>
 
     <script>
-        // Fungsi baru untuk menampilkan notifikasi dalam card
-function tampilkanNotif(elementId, status, pesan) {
-    let notifEl = document.getElementById(elementId);
-    notifEl.style.display = "block";
-    notifEl.innerText = pesan;
-    
-    if (status === "success") {
-        notifEl.className = "notif-box notif-success";
-    } else {
-        notifEl.className = "notif-box notif-error";
-    }
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    let savedNotification = sessionStorage.getItem("pageNotification");
-    if (!savedNotification) return;
-
-    let notification = JSON.parse(savedNotification);
-    tampilkanNotif("notif-login", notification.status, notification.message);
-    sessionStorage.removeItem("pageNotification");
-});
-
-function toggleForm() {
-    let boxLogin = document.getElementById("box-login");
-    let boxReg = document.getElementById("box-register");
-    
-    // Sembunyikan notifikasi saat ganti form
-    document.getElementById("notif-login").style.display = "none";
-    document.getElementById("notif-register").style.display = "none";
-
-    if (boxLogin.style.display === "none") {
-        boxLogin.style.display = "block";
-        boxReg.style.display = "none";
-    } else {
-        boxLogin.style.display = "none";
-        boxReg.style.display = "block";
-    }
-}
-
-function togglePassword(inputId, button) {
-    let passwordInput = document.getElementById(inputId);
-    let isPasswordHidden = passwordInput.type === "password";
-
-    passwordInput.type = isPasswordHidden ? "text" : "password";
-    button.innerHTML = isPasswordHidden
-        ? '<i class="fa-solid fa-eye-slash"></i>'
-        : '<i class="fa-solid fa-eye"></i>';
-    button.setAttribute("aria-label", isPasswordHidden ? "Sembunyikan password" : "Tampilkan password");
-    button.setAttribute("title", isPasswordHidden ? "Sembunyikan password" : "Tampilkan password");
-}
-
-function prosesRegister(e) {
-    e.preventDefault();
-    let password = document.getElementById("reg-password").value;
-    let passwordConfirm = document.getElementById("reg-password-confirm").value;
-    if (password !== passwordConfirm) {
-        tampilkanNotif("notif-register", "error", "Konfirmasi password tidak cocok.");
-        return;
-    }
-    if (password.length < 8) {
-        tampilkanNotif("notif-register", "error", "Password minimal 8 karakter.");
-        return;
-    }
-    let formData = new FormData();
-    formData.append("nama", document.getElementById("reg-nama").value);
-    formData.append("email", document.getElementById("reg-email").value);
-    formData.append("password", password);
-
-    fetch("../register.php", { method: "POST", body: formData })
-    .then(response => response.json())
-    .then(data => {
-        if(data.status === "success") {
-            tampilkanNotif("notif-register", "success", data.message + " Mengalihkan ke login...");
-            setTimeout(() => toggleForm(), 2000); // Pindah ke form login setelah 2 detik
-        } else {
-            tampilkanNotif("notif-register", "error", data.message);
+        function tampilkanNotif(elementId, status, pesan) {
+            let notifEl = document.getElementById(elementId);
+            notifEl.style.display = "block";
+            notifEl.innerText = pesan;
+            notifEl.className = status === "success" ? "notif-box notif-success" : "notif-box notif-error";
         }
-    })
-    .catch(() => tampilkanNotif("notif-register", "error", "Server tidak dapat dihubungi. Coba lagi."));
-}
 
-function prosesLogin(e) {
-    e.preventDefault();
-    let formData = new FormData();
-    formData.append("email", document.getElementById("login-email").value);
-    formData.append("password", document.getElementById("login-password").value);
+        document.addEventListener("DOMContentLoaded", function() {
+            let savedNotification = sessionStorage.getItem("pageNotification");
+            if (!savedNotification) return;
 
-    // Tampilkan pesan loading sementara memproses
-    tampilkanNotif("notif-login", "success", "Memeriksa data...");
+            try {
+                let notification = JSON.parse(savedNotification);
+                tampilkanNotif("notif-login", notification.status, notification.message);
+            } catch(e) {
+                console.error("Gagal membaca notifikasi sesi", e);
+            }
+            sessionStorage.removeItem("pageNotification");
+        });
 
-    fetch("../login.php", { method: "POST", body: formData })
-    .then(response => response.json())
-    .then(data => {
-        if(data.status === "success") {
-            // Bersihkan cache profil akun sebelumnya sebelum memuat profil akun ini.
-            localStorage.removeItem("fotoProfil");
-            localStorage.removeItem("namaUser");
-            localStorage.removeItem("emailUser");
-            localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("userId", data.data.id);
-            localStorage.setItem("namaUser", data.data.nama);
-            localStorage.setItem("emailUser", data.data.email);
+        function toggleForm() {
+            let boxLogin = document.getElementById("box-login");
+            let boxReg = document.getElementById("box-register");
             
-            tampilkanNotif("notif-login", "success", "Login berhasil! Mengalihkan...");
-            setTimeout(() => window.location.href = "index.html", 1000); // Jeda 1 detik agar user bisa baca
-        } else {
-            tampilkanNotif("notif-login", "error", data.message);
+            document.getElementById("notif-login").style.display = "none";
+            document.getElementById("notif-register").style.display = "none";
+
+            if (boxLogin.style.display === "none") {
+                boxLogin.style.display = "block";
+                boxReg.style.display = "none";
+            } else {
+                boxLogin.style.display = "none";
+                boxReg.style.display = "block";
+            }
         }
-    })
-    .catch(() => tampilkanNotif("notif-login", "error", "Server tidak dapat dihubungi. Coba lagi."));
-}
+
+        function togglePassword(inputId, button) {
+            let passwordInput = document.getElementById(inputId);
+            let isPasswordHidden = passwordInput.type === "password";
+
+            passwordInput.type = isPasswordHidden ? "text" : "password";
+            button.innerHTML = isPasswordHidden
+                ? '<i class="fa-solid fa-eye-slash" aria-hidden="true"></i>'
+                : '<i class="fa-solid fa-eye" aria-hidden="true"></i>';
+            button.setAttribute("aria-label", isPasswordHidden ? "Sembunyikan password" : "Tampilkan password");
+            button.setAttribute("title", isPasswordHidden ? "Sembunyikan password" : "Tampilkan password");
+        }
+
+        function prosesRegister(e) {
+            e.preventDefault();
+            let password = document.getElementById("reg-password").value;
+            let passwordConfirm = document.getElementById("reg-password-confirm").value;
+            
+            if (password !== passwordConfirm) {
+                tampilkanNotif("notif-register", "error", "Konfirmasi password tidak cocok.");
+                return;
+            }
+            if (password.length < 8) {
+                tampilkanNotif("notif-register", "error", "Password minimal 8 karakter.");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("nama", document.getElementById("reg-nama").value);
+            formData.append("email", document.getElementById("reg-email").value);
+            formData.append("password", password);
+
+            fetch("../register.php", { method: "POST", body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        tampilkanNotif("notif-register", "success", data.message + " Mengalihkan ke login...");
+                        setTimeout(() => toggleForm(), 2000);
+                    } else {
+                        tampilkanNotif("notif-register", "error", data.message);
+                    }
+                })
+                .catch(() => tampilkanNotif("notif-register", "error", "Server tidak dapat dihubungi. Coba lagi."));
+        }
+
+        function prosesLogin(e) {
+            e.preventDefault();
+            let formData = new FormData();
+            formData.append("email", document.getElementById("login-email").value);
+            formData.append("password", document.getElementById("login-password").value);
+
+            tampilkanNotif("notif-login", "success", "Memeriksa data...");
+
+            fetch("../login.php", { method: "POST", body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        localStorage.removeItem("fotoProfil");
+                        localStorage.removeItem("namaUser");
+                        localStorage.removeItem("emailUser");
+                        localStorage.setItem("isLoggedIn", "true");
+                        localStorage.setItem("userId", data.data.id);
+                        localStorage.setItem("namaUser", data.data.nama);
+                        localStorage.setItem("emailUser", data.data.email);
+                        
+                        tampilkanNotif("notif-login", "success", "Login berhasil! Mengalihkan...");
+                        setTimeout(() => window.location.href = "index.html", 1000);
+                    } else {
+                        tampilkanNotif("notif-login", "error", data.message);
+                    }
+                })
+                .catch(() => tampilkanNotif("notif-login", "error", "Server tidak dapat dihubungi. Coba lagi."));
+        }
     </script>
 </body>
 </html>

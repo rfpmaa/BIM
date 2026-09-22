@@ -15,24 +15,85 @@
         .question { border-bottom: 1px solid #e2e8f0; padding: 0 0 22px; margin-bottom: 22px; }
         .question:last-of-type { border-bottom: 0; }
         .question h2 { color: #1e293b; font-size: 16px; margin: 0 0 14px; }
-        .answer { display: block; color: #475569; font-size: 13px; margin: 10px 0; cursor: pointer; }
-        .answer input { margin-right: 8px; accent-color: #2563eb; }
-        .quiz-button { background: #2563eb; color: white; border: 0; border-radius: 8px; padding: 11px 16px; cursor: pointer; font-weight: 600; }
-        #quiz-result { color: #1d4ed8; font-size: 14px; font-weight: 600; margin-top: 18px; }
+        .answer { display: flex; align-items: center; color: #475569; font-size: 14px; margin: 10px 0; cursor: pointer; }
+        .answer input { margin-right: 10px; accent-color: #2563eb; cursor: pointer; }
+        .quiz-button { background: #2563eb; color: white; border: 0; border-radius: 8px; padding: 11px 16px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        .quiz-button:hover { background: #1d4ed8; }
+        #quiz-result { color: #1d4ed8; font-size: 15px; font-weight: 600; margin-top: 18px; }
     </style>
 </head>
 <body>
-    <div class="sidebar"><div class="logo"><i class="fa-solid fa-cube"></i><span>BIM Learn</span></div><ul>
-        <li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li><li><a href="modul.html"><i class="fa-solid fa-book"></i> Modul</a></li><li><a href="video.html"><i class="fa-solid fa-circle-play"></i> Video</a></li><li><a href="simulasi.html"><i class="fa-solid fa-cubes"></i> Simulasi 3D</a></li><li><a href="latihan.html" class="active"><i class="fa-solid fa-clipboard-check"></i> Latihan</a></li><li><a href="progres.html"><i class="fa-solid fa-chart-line"></i> Progress</a></li><li><a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a></li>
-    </ul></div>
-    <main class="main-content"><div class="quiz-header"><h1>Latihan BIM</h1><p>Uji pemahamanmu setelah mempelajari modul.</p></div><form class="quiz-card" id="quiz-form">
-        <div class="question"><h2>1. BIM digunakan terutama untuk...</h2><label class="answer"><input type="radio" name="q1" value="a"> Mengelola informasi proyek dalam satu alur kerja</label><label class="answer"><input type="radio" name="q1" value="b"> Menggantikan seluruh tenaga kerja</label></div>
-        <div class="question"><h2>2. BIM 4D berkaitan dengan...</h2><label class="answer"><input type="radio" name="q2" value="a"> Estimasi biaya</label><label class="answer"><input type="radio" name="q2" value="b"> Waktu dan jadwal proyek</label></div>
-        <div class="question"><h2>3. Kolaborasi BIM membantu tim untuk...</h2><label class="answer"><input type="radio" name="q3" value="a"> Berbagi dan meninjau informasi model</label><label class="answer"><input type="radio" name="q3" value="b"> Menghapus kebutuhan koordinasi</label></div>
-        <button class="quiz-button" type="submit"><i class="fa-solid fa-check"></i> Periksa Jawaban</button><div id="quiz-result"></div>
-    </form></main>
-    <script src="../script.js"></script><script>
-        document.getElementById("quiz-form").addEventListener("submit", function(event) { event.preventDefault(); let score = 0; if (document.querySelector('input[name="q1"]:checked')?.value === "a") score++; if (document.querySelector('input[name="q2"]:checked')?.value === "b") score++; if (document.querySelector('input[name="q3"]:checked')?.value === "a") score++; document.getElementById("quiz-result").textContent = "Nilai latihan: " + score + "/3"; });
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-cube" aria-hidden="true"></i>
+            <span>BIM Learn</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i> Beranda</a></li>
+                <li><a href="modul.html"><i class="fa-solid fa-book" aria-hidden="true"></i> Modul</a></li>
+                <li><a href="video.html"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> Video</a></li>
+                <li><a href="simulasi.html"><i class="fa-solid fa-cubes" aria-hidden="true"></i> Simulasi 3D</a></li>
+                <li><a href="latihan.html" class="active"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> Latihan</a></li>
+                <li><a href="progres.html"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Progress</a></li>
+                <li><a href="profil.html"><i class="fa-solid fa-user" aria-hidden="true"></i> Profil</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="quiz-header">
+            <h1>Latihan BIM</h1>
+            <p>Uji pemahamanmu setelah mempelajari modul.</p>
+        </header>
+
+        <form class="quiz-card" id="quiz-form">
+            <div class="question">
+                <h2>1. BIM digunakan terutama untuk...</h2>
+                <label for="q1-a" class="answer">
+                    <input type="radio" id="q1-a" name="q1" value="a"> Mengelola informasi proyek dalam satu alur kerja
+                </label>
+                <label for="q1-b" class="answer">
+                    <input type="radio" id="q1-b" name="q1" value="b"> Menggantikan seluruh tenaga kerja
+                </label>
+            </div>
+
+            <div class="question">
+                <h2>2. BIM 4D berkaitan dengan...</h2>
+                <label for="q2-a" class="answer">
+                    <input type="radio" id="q2-a" name="q2" value="a"> Estimasi biaya
+                </label>
+                <label for="q2-b" class="answer">
+                    <input type="radio" id="q2-b" name="q2" value="b"> Waktu dan jadwal proyek
+                </label>
+            </div>
+
+            <div class="question">
+                <h2>3. Kolaborasi BIM membantu tim untuk...</h2>
+                <label for="q3-a" class="answer">
+                    <input type="radio" id="q3-a" name="q3" value="a"> Berbagi dan meninjau informasi model
+                </label>
+                <label for="q3-b" class="answer">
+                    <input type="radio" id="q3-b" name="q3" value="b"> Menghapus kebutuhan koordinasi
+                </label>
+            </div>
+
+            <button class="quiz-button" type="submit"><i class="fa-solid fa-check" aria-hidden="true"></i> Periksa Jawaban</button>
+            <div id="quiz-result" aria-live="polite"></div>
+        </form>
+    </main>
+
+    <script src="../script.js?v=20260923-progress"></script>
+    <script>
+        document.getElementById("quiz-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let score = 0;
+            if (document.querySelector('input[name="q1"]:checked')?.value === "a") score++;
+            if (document.querySelector('input[name="q2"]:checked')?.value === "b") score++;
+            if (document.querySelector('input[name="q3"]:checked')?.value === "a") score++;
+            
+            document.getElementById("quiz-result").textContent = "Nilai latihan Anda: " + score + " / 3";
+        });
     </script>
 </body>
 </html>

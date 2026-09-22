@@ -1,13 +1,150 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Progres Siswa - BIM Learn</title>
-    <link rel="stylesheet" href="../style.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progres Siswa - BIM Learn</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .admin-heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:26px}.admin-heading h1{color:#1e293b;font-size:27px;margin:0 0 7px}.admin-heading p{color:#64748b;font-size:14px;margin:0}.admin-logout{border:1px solid #fecaca;background:#fff1f2;color:#b91c1c;border-radius:8px;padding:9px 13px;cursor:pointer;font-weight:600}.admin-panel{background:white;border:1px solid #e2e8f0;border-radius:13px;padding:22px}.admin-panel h2{color:#1e293b;font-size:17px;margin:0 0 5px}.admin-panel p{color:#64748b;font-size:13px;margin:0 0 18px}.student-table-wrap{overflow-x:auto}.student-table{width:100%;border-collapse:collapse;min-width:650px}.student-table th,.student-table td{border-bottom:1px solid #f1f5f9;padding:13px 10px;color:#475569;font-size:12px;text-align:left}.student-table th{color:#64748b;font-weight:700;background:#f8fafc}.progress-pill{color:#1d4ed8;background:#dbeafe;border-radius:20px;padding:4px 8px;font-weight:700}.admin-empty{color:#94a3b8;font-size:13px}@media(max-width:650px){.admin-heading{align-items:flex-start;flex-direction:column;gap:15px}}
+        .admin-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:26px}
+        .admin-heading h1{color:#1e293b;font-size:27px;margin:0 0 7px}
+        .admin-heading p{color:#64748b;font-size:14px;margin:0}
+        .admin-logout{border:1px solid #fecaca;background:#fff1f2;color:#b91c1c;border-radius:8px;padding:9px 13px;cursor:pointer;font-weight:600}
+        .admin-panel{background:white;border:1px solid #e2e8f0;border-radius:13px;padding:22px}
+        .admin-panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+        .admin-panel h2{color:#1e293b;font-size:17px;margin:0 0 5px}
+        .admin-panel p{color:#64748b;font-size:13px;margin:0}
+        .search-box{border:1px solid #cbd5e1;border-radius:8px;padding:8px 12px;font:inherit;font-size:13px;width:240px}
+        .search-box:focus{outline:none;border-color:#2563eb}
+        .student-table-wrap{overflow-x:auto}
+        .student-table{width:100%;border-collapse:collapse;min-width:650px}
+        .student-table th,.student-table td{border-bottom:1px solid #f1f5f9;padding:13px 10px;color:#475569;font-size:12px;text-align:left}
+        .student-table th{color:#64748b;font-weight:700;background:#f8fafc}
+        .progress-pill{color:#1d4ed8;background:#dbeafe;border-radius:20px;padding:4px 8px;font-weight:700}
+        .admin-empty{color:#94a3b8;font-size:13px;text-align:center;padding:20px 0}
+        @media(max-width:650px){
+            .admin-heading{align-items:flex-start;flex-direction:column;gap:15px}
+            .admin-panel-header{flex-direction:column;align-items:flex-start}
+            .search-box{width:100%}
+        }
     </style>
 </head>
-<body data-admin-page="siswa"><div id="admin-sidebar"></div><main class="main-content"><div class="admin-heading"><div><h1>Progres Siswa</h1><p>Pantau perkembangan siswa dalam menyelesaikan modul.</p></div><button class="admin-logout" id="admin-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div><div id="admin-notice" style="display:none"></div><section class="admin-panel"><h2>Daftar Siswa</h2><p>Data progres diambil dari aktivitas belajar setiap akun.</p><div class="student-table-wrap"><table class="student-table"><thead><tr><th>Nama</th><th>Email</th><th>Kelas</th><th>Jurusan</th><th>Modul selesai</th><th>Rata-rata</th></tr></thead><tbody id="student-list"></tbody></table></div></section></main><script src="admin.js"></script><script>
-fetch("../admin_api.php",{credentials:"same-origin"}).then(response=>{if(response.status===403){location.href="login.html";return null}return response.json()}).then(result=>{if(!result||result.status!=="success")return;let list=document.getElementById("student-list");result.data.students.forEach(student=>{let row=document.createElement("tr");[student.nama,student.email,student.kelas||"-",student.jurusan||"-",student.selesai+"/4"].forEach(value=>{let cell=document.createElement("td");cell.textContent=value;row.appendChild(cell)});let average=document.createElement("td");let pill=document.createElement("span");pill.className="progress-pill";pill.textContent=student.rata_rata+"%";average.appendChild(pill);row.appendChild(average);list.appendChild(row)});if(!result.data.students.length)list.innerHTML='<tr><td colspan="6" class="admin-empty">Belum ada siswa.</td></tr>'}).catch(()=>showAdminNotice("Data siswa gagal dimuat.","error"));
-</script></body>
+<body data-admin-page="siswa">
+    <div id="admin-sidebar"></div>
+    <main class="main-content">
+        <div class="admin-heading">
+            <div>
+                <h1>Progres Siswa</h1>
+                <p>Pantau perkembangan siswa dalam menyelesaikan modul.</p>
+            </div>
+            <button class="admin-logout" id="admin-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+        </div>
+
+        <div id="admin-notice" style="display:none"></div>
+
+        <section class="admin-panel">
+            <div class="admin-panel-header">
+                <div>
+                    <h2>Daftar Siswa</h2>
+                    <p>Data progres diambil dari aktivitas belajar setiap akun.</p>
+                </div>
+                <input type="text" id="search-student" class="search-box" placeholder="Cari nama, kelas, jurusan...">
+            </div>
+
+            <div class="student-table-wrap">
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Kelas</th>
+                            <th>Jurusan</th>
+                            <th>Modul selesai</th>
+                            <th>Rata-rata</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-list"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="admin.js"></script>
+    <script>
+        let studentData = [];
+
+        function renderStudents(students) {
+            let list = document.getElementById("student-list");
+            list.replaceChildren();
+
+            if (!students.length) {
+                list.innerHTML = '<tr><td colspan="6" class="admin-empty">Data siswa tidak ditemukan.</td></tr>';
+                return;
+            }
+
+            students.forEach(student => {
+                let row = document.createElement("tr");
+
+                [student.nama, student.email, student.kelas || "-", student.jurusan || "-", (student.selesai || 0) + "/4"].forEach(value => {
+                    let cell = document.createElement("td");
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+
+                let average = document.createElement("td");
+                let pill = document.createElement("span");
+                pill.className = "progress-pill";
+                pill.textContent = (student.rata_rata || 0) + "%";
+                average.appendChild(pill);
+                row.appendChild(average);
+
+                list.appendChild(row);
+            });
+        }
+
+        fetch("../admin_api.php?t=" + Date.now(), { credentials: "same-origin", cache: "no-store" })
+            .then(response => {
+                if (response.status === 403) {
+                    location.href = "login.html";
+                    return null;
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (!result || result.status !== "success") return;
+                studentData = result.data.students || [];
+                renderStudents(studentData);
+            })
+            .catch(() => showAdminNotice("Data siswa gagal dimuat.", "error"));
+
+        setInterval(function() {
+            fetch("../admin_api.php?t=" + Date.now(), { credentials: "same-origin", cache: "no-store" })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status !== "success") return;
+                    studentData = result.data.students || [];
+                    let keyword = document.getElementById("search-student").value.toLowerCase();
+                    renderStudents(studentData.filter(s =>
+                        (s.nama && s.nama.toLowerCase().includes(keyword)) ||
+                        (s.email && s.email.toLowerCase().includes(keyword)) ||
+                        (s.kelas && s.kelas.toLowerCase().includes(keyword)) ||
+                        (s.jurusan && s.jurusan.toLowerCase().includes(keyword))
+                    ));
+                });
+        }, 3000);
+
+        document.getElementById("search-student").addEventListener("input", function(e) {
+            let keyword = e.target.value.toLowerCase();
+            let filtered = studentData.filter(s => 
+                (s.nama && s.nama.toLowerCase().includes(keyword)) ||
+                (s.email && s.email.toLowerCase().includes(keyword)) ||
+                (s.kelas && s.kelas.toLowerCase().includes(keyword)) ||
+                (s.jurusan && s.jurusan.toLowerCase().includes(keyword))
+            );
+            renderStudents(filtered);
+        });
+    </script>
+</body>
 </html>

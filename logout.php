@@ -1,5 +1,9 @@
 <?php
 header("Content-Type: application/json");
+if (($_GET['scope'] ?? '') === 'admin' && session_status() === PHP_SESSION_NONE) {
+    session_name('BIM_ADMIN_SESSION');
+    session_start();
+}
 include 'koneksi.php';
 
 $_SESSION = [];

@@ -1,5 +1,7 @@
 <?php
 header("Content-Type: application/json");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
 include 'koneksi.php';
 include 'admin_guard.php';
 ensureApplicationTables($conn);
@@ -13,8 +15,17 @@ if (!isset($_SESSION['user_id'])) {
 $userId = (int) $_SESSION['user_id'];
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $stmt = $conn->prepare("SELECT modul, progress FROM progres_siswa WHERE user_id = ? ORDER BY modul");
+    if (!$stmt) {
+        http_response_code(500);
+        echo json_encode(["status" => "error", "message" => "Query progress gagal dibuat."]);
+        exit;
+    }
     $stmt->bind_param("i", $userId);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        http_response_code(500);
+        echo json_encode(["status" => "error", "message" => "Progress gagal dibaca dari database."]);
+        exit;
+    }
     $result = $stmt->get_result();
     $data = [];
     while ($row = $result->fetch_assoc()) $data[] = $row;
@@ -32,9 +43,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     $stmt = $conn->prepare("INSERT INTO progres_siswa (user_id, modul, progress) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE progress = GREATEST(progress, VALUES(progress))");
+    if (!$stmt) {
+        http_response_code(500);
+        echo json_encode(["status" => "error", "message" => "Query progress gagal dibuat."]);
+        exit;
+    }
     $stmt->bind_param("iii", $userId, $modul, $progress);
-    $stmt->execute();
-    echo json_encode(["status" => "success", "message" => "Progress tersimpan."]);
+    if (!$stmt->execute()) {
+        http_response_code(500);
+        echo json_encode(["status" => "error", "message" => "Progress gagal disimpan ke database."]);
+        exit;
+    }
+    echo json_encode(["status" => "success", "message" => "Progress tersimpan.", "data" => ["user_id" => $userId, "modul" => $modul, "progress" => $progress]]);
     exit;
 }
 

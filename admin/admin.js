@@ -1,14 +1,32 @@
 function showAdminNotice(message, status) {
     let notice = document.getElementById("admin-notice");
     if (!notice) return;
+
     notice.textContent = message;
-    notice.className = "page-notification " + (status === "error" ? "notification-error" : "notification-success");
-    notice.style.display = "flex";
-    setTimeout(() => notice.style.display = "none", 3500);
+    notice.style.display = "block";
+    notice.style.padding = "10px 14px";
+    notice.style.marginBottom = "18px";
+    notice.style.borderRadius = "8px";
+    notice.style.fontSize = "13px";
+    notice.style.fontWeight = "600";
+
+    if (status === "error") {
+        notice.style.background = "#fff1f2";
+        notice.style.color = "#b91c1c";
+        notice.style.border = "1px solid #fecaca";
+    } else {
+        notice.style.background = "#f0fdf4";
+        notice.style.color = "#15803d";
+        notice.style.border = "1px solid #bbf7d0";
+    }
+
+    setTimeout(() => {
+        notice.style.display = "none";
+    }, 3500);
 }
 
 function logoutAdmin() {
-    fetch("../logout.php", { method: "POST", credentials: "same-origin" })
+    fetch("../logout.php?scope=admin", { method: "POST", credentials: "same-origin" })
         .then(() => window.location.href = "login.html")
         .catch(() => showAdminNotice("Logout gagal. Silakan coba lagi.", "error"));
 }

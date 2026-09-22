@@ -31,7 +31,7 @@
         <li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li><li><a href="modul.html"><i class="fa-solid fa-book"></i> Modul</a></li><li><a href="video.html"><i class="fa-solid fa-circle-play"></i> Video</a></li><li><a href="simulasi.html"><i class="fa-solid fa-cubes"></i> Simulasi 3D</a></li><li><a href="latihan.html"><i class="fa-solid fa-clipboard-check"></i> Latihan</a></li><li><a href="progres.html" class="active"><i class="fa-solid fa-chart-line"></i> Progress</a></li><li><a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a></li>
     </ul></div>
     <main class="main-content"><div class="progress-header"><h1>Progress Belajar</h1><p>Pantau perjalananmu menyelesaikan seluruh modul BIM.</p></div><div class="progress-overview"><div class="overview-item"><span>Modul selesai</span><strong id="completed-count">0/4</strong></div><div class="overview-item"><span>Progress rata-rata</span><strong id="average-progress">0%</strong></div><div class="overview-item"><span>Status belajar</span><strong id="learning-status">Mulai</strong></div></div><div class="progress-list" id="progress-list"></div></main>
-    <script src="../script.js"></script><script>
+    <script src="../script.js?v=20260923-progress"></script><script>
         let moduleNames = ["Pengenalan BIM", "Pemodelan 3D", "Kolaborasi & BIM 360", "Manajemen Proyek"];
         function renderProgress(values) {
             let total = 0;
@@ -51,7 +51,7 @@
             document.getElementById("average-progress").textContent = Math.round(total / 4) + "%";
             document.getElementById("learning-status").textContent = completed === 4 ? "Selesai" : completed > 0 ? "Berjalan" : "Mulai";
         }
-        fetch("../progress_api.php", { credentials: "same-origin" }).then(response => response.json()).then(result => {
+        fetch("../progress_api.php?t=" + Date.now(), { credentials: "same-origin", cache: "no-store" }).then(response => response.json()).then(result => {
             let values = [0, 0, 0, 0];
             if (result.status === "success") result.data.forEach(item => values[Number(item.modul) - 1] = Number(item.progress));
             renderProgress(values);

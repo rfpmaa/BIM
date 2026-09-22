@@ -79,6 +79,7 @@
             <div>
                 <h1>Modul Pembelajaran</h1>
                 <p>Pelajari BIM secara bertahap dari konsep dasar hingga manajemen proyek.</p>
+                <p id="progress-sync-status" style="margin-top:8px;color:#64748b;font-size:12px;">Memeriksa koneksi progress...</p>
             </div>
             <div class="module-summary">
                 <strong>4</strong>
@@ -112,7 +113,7 @@
                         <div class="module-progress-label"><span>Progress</span><span id="module-progress-text-1">0%</span></div>
                         <div class="module-progress-bar"><div class="module-progress-fill" id="module-progress-bar-1"></div></div>
                     </div>
-                    <button class="complete-btn" onclick="selesaiModul(1)"><i class="fa-solid fa-check"></i> Selesai</button>
+                    <button class="complete-btn" type="button" data-module="1"><i class="fa-solid fa-check"></i> Selesai</button>
                 </div>
             </article>
 
@@ -141,7 +142,7 @@
                         <div class="module-progress-label"><span>Progress</span><span id="module-progress-text-2">0%</span></div>
                         <div class="module-progress-bar"><div class="module-progress-fill" id="module-progress-bar-2"></div></div>
                     </div>
-                    <button class="complete-btn" onclick="selesaiModul(2)"><i class="fa-solid fa-check"></i> Selesai</button>
+                    <button class="complete-btn" type="button" data-module="2"><i class="fa-solid fa-check"></i> Selesai</button>
                 </div>
             </article>
 
@@ -170,7 +171,7 @@
                         <div class="module-progress-label"><span>Progress</span><span id="module-progress-text-3">0%</span></div>
                         <div class="module-progress-bar"><div class="module-progress-fill" id="module-progress-bar-3"></div></div>
                     </div>
-                    <button class="complete-btn" onclick="selesaiModul(3)"><i class="fa-solid fa-check"></i> Selesai</button>
+                    <button class="complete-btn" type="button" data-module="3"><i class="fa-solid fa-check"></i> Selesai</button>
                 </div>
             </article>
 
@@ -199,13 +200,84 @@
                         <div class="module-progress-label"><span>Progress</span><span id="module-progress-text-4">0%</span></div>
                         <div class="module-progress-bar"><div class="module-progress-fill" id="module-progress-bar-4"></div></div>
                     </div>
-                    <button class="complete-btn" onclick="selesaiModul(4)"><i class="fa-solid fa-check"></i> Selesai</button>
+                    <button class="complete-btn" type="button" data-module="4"><i class="fa-solid fa-check"></i> Selesai</button>
                 </div>
             </article>
         </div>
     </div>
 
     <!-- Menghubungkan ke JavaScript -->
-    <script src="../script.js"></script>
+    <script src="../script.js?v=20260923-progress-status"></script>
+    <script>
+        document.querySelectorAll(".complete-btn").forEach(function(button) {
+            button.addEventListener("click", function() {
+                selesaiModul(Number(button.dataset.module));
+            });
+        });
+
+        fetch("../session_status.php?t=" + Date.now(), { credentials: "same-origin", cache: "no-store" })
+            .then(response => response.json())
+            .then(result => {
+                let status = document.getElementById("progress-sync-status");
+                if (!result.authenticated || !result.data || result.data.role !== "siswa") {
+                    status.textContent = "Sesi siswa tidak aktif. Silakan login ulang.";
+                    status.style.color = "#b91c1c";
+                    return;
+                }
+                status.textContent = "Progress tersambung ke akun " + result.data.email;
+                status.style.color = "#15803d";
+            })
+            .catch(function() {
+                let status = document.getElementById("progress-sync-status");
+                status.textContent = "Koneksi progress gagal diperiksa.";
+                status.style.color = "#b91c1c";
+            });
+
+        async function loadPublishedMaterials() {
+            try {
+                const response = await fetch("../materi_public.php", { credentials: "same-origin" });
+                const result = await response.json();
+                if (result.status !== "success") return;
+
+                const grouped = { 1: [], 2: [], 3: [], 4: [] };
+                (result.data || []).forEach(item => {
+                    const moduleNo = Number(item.modul || 1);
+                    if (moduleNo >= 1 && moduleNo <= 4) grouped[moduleNo].push(item);
+                });
+
+                const cards = document.querySelectorAll(".module-card");
+                cards.forEach((card, index) => {
+                    const moduleNo = index + 1;
+                    const items = grouped[moduleNo] || [];
+                    const item = items[0] || null;
+                    const title = card.querySelector("h2");
+                    const description = card.querySelector(".description");
+                    const lessonList = card.querySelector(".lesson-list");
+
+                    if (title) title.textContent = `${moduleNo}. ${item ? item.judul : ["Pengenalan BIM", "Pemodelan 3D", "Kolaborasi & BIM 360", "Manajemen Proyek"][index]}`;
+                    if (description) description.textContent = item ? item.ringkasan : "Materi pembelajaran ini belum tersedia.";
+                    if (lessonList) {
+                        lessonList.innerHTML = "";
+                        const list = item ? (item.isi || "Materi pembelajaran tersedia.").split(/\n|\.|;|:/).filter(Boolean).slice(0, 4) : [
+                            "Apa itu BIM?",
+                            "Manfaat BIM dalam proyek",
+                            "Alur kerja dan istilah dasar"
+                        ];
+                        list.forEach(text => {
+                            const li = document.createElement("li");
+                            li.innerHTML = '<i class="fa-solid fa-circle-play"></i> ' + text.trim();
+                            lessonList.appendChild(li);
+                        });
+                    }
+                });
+            } catch (error) {
+                console.error("Gagal memuat materi publik:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            loadPublishedMaterials();
+        });
+    </script>
 </body>
 </html>

@@ -21,50 +21,62 @@
     </style>
 </head>
 <body>
-    <div class="sidebar"><div class="logo"><i class="fa-solid fa-cube"></i><span>BIM Learn</span></div><ul>
-        <li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
-        <li><a href="modul.html"><i class="fa-solid fa-book"></i> Modul</a></li>
-        <li><a href="video.html" class="active"><i class="fa-solid fa-circle-play"></i> Video</a></li>
-        <li><a href="simulasi.html"><i class="fa-solid fa-cubes"></i> Simulasi 3D</a></li>
-        <li><a href="latihan.html"><i class="fa-solid fa-clipboard-check"></i> Latihan</a></li>
-        <li><a href="progres.html"><i class="fa-solid fa-chart-line"></i> Progress</a></li>
-        <li><a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a></li>
-    </ul></div>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-cube"></i>
+            <span>BIM Learn</span>
+        </div>
+        <ul>
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
+            <li><a href="modul.html"><i class="fa-solid fa-book"></i> Modul</a></li>
+            <li><a href="video.html" class="active"><i class="fa-solid fa-circle-play"></i> Video</a></li>
+            <li><a href="simulasi.html"><i class="fa-solid fa-cubes"></i> Simulasi 3D</a></li>
+            <li><a href="latihan.html"><i class="fa-solid fa-clipboard-check"></i> Latihan</a></li>
+            <li><a href="progres.html"><i class="fa-solid fa-chart-line"></i> Progress</a></li>
+            <li><a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a></li>
+        </ul>
+    </div>
+
     <main class="main-content">
-        <div class="resource-header"><h1>Video Pembelajaran</h1><p>Gunakan daftar ini untuk mengikuti materi visual setiap modul BIM.</p></div>
+        <div class="resource-header">
+            <h1>Video Pembelajaran</h1>
+            <p>Gunakan daftar ini untuk mengikuti materi visual setiap modul BIM.</p>
+        </div>
         <div class="resource-grid" id="resource-grid">
-            <article class="resource-card"><div class="resource-icon"><i class="fa-solid fa-play"></i></div><h2>Pengenalan BIM</h2><p>Mulai dari konsep dasar, tujuan, dan manfaat BIM dalam proyek konstruksi.</p><a class="resource-link" href="modul.html#modul-1">Buka modul <i class="fa-solid fa-arrow-right"></i></a></article>
-            <article class="resource-card"><div class="resource-icon"><i class="fa-solid fa-play"></i></div><h2>Pemodelan 3D di Revit</h2><p>Pelajari alur kerja pemodelan dan elemen dasar dalam model bangunan.</p><a class="resource-link" href="modul.html#modul-2">Buka modul <i class="fa-solid fa-arrow-right"></i></a></article>
-            <article class="resource-card"><div class="resource-icon"><i class="fa-solid fa-play"></i></div><h2>Kolaborasi BIM 360</h2><p>Kenali cara tim berbagi, meninjau, dan mengoordinasikan model proyek.</p><a class="resource-link" href="modul.html#modul-3">Buka modul <i class="fa-solid fa-arrow-right"></i></a></article>
-            <article class="resource-card"><div class="resource-icon"><i class="fa-solid fa-play"></i></div><h2>Manajemen Proyek</h2><p>Pelajari hubungan BIM dengan waktu, biaya, dan visualisasi proyek.</p><a class="resource-link" href="modul.html#modul-4">Buka modul <i class="fa-solid fa-arrow-right"></i></a></article>
+            <!-- Modul 1 -->
+            <article class="resource-card">
+                <div class="resource-icon"><i class="fa-solid fa-play"></i></div>
+                <h2>Pengenalan BIM</h2>
+                <p>Mulai dari konsep dasar, tujuan, dan manfaat BIM dalam proyek konstruksi.</p>
+                <a class="resource-link" href="modul.html#modul-1">Buka modul <i class="fa-solid fa-arrow-right"></i></a>
+            </article>
+
+            <!-- Modul 2 -->
+            <article class="resource-card">
+                <div class="resource-icon"><i class="fa-solid fa-play"></i></div>
+                <h2>Pemodelan 3D di Revit</h2>
+                <p>Pelajari alur kerja pemodelan dan elemen dasar dalam model bangunan.</p>
+                <a class="resource-link" href="modul.html#modul-2">Buka modul <i class="fa-solid fa-arrow-right"></i></a>
+            </article>
+
+            <!-- Modul 3 -->
+            <article class="resource-card">
+                <div class="resource-icon"><i class="fa-solid fa-play"></i></div>
+                <h2>Kolaborasi &amp; BIM 360</h2>
+                <p>Pelajari alur kerja kolaborasi tim, pembagian model, dan koordinasi via cloud.</p>
+                <a class="resource-link" href="modul.html#modul-3">Buka modul <i class="fa-solid fa-arrow-right"></i></a>
+            </article>
+
+            <!-- Modul 4 -->
+            <article class="resource-card">
+                <div class="resource-icon"><i class="fa-solid fa-play"></i></div>
+                <h2>Manajemen Proyek</h2>
+                <p>Pahami penerapan simulasi BIM 4D (waktu), BIM 5D (biaya), dan visualisasi laporan.</p>
+                <a class="resource-link" href="modul.html#modul-4">Buka modul <i class="fa-solid fa-arrow-right"></i></a>
+            </article>
         </div>
     </main>
-    <script src="../script.js"></script>
-    <script>
-        fetch("../materi_public.php", { credentials: "same-origin" })
-            .then(response => response.json())
-            .then(result => {
-                if (result.status !== "success" || !result.data.length) return;
-                let grid = document.getElementById("resource-grid");
-                result.data.forEach(item => {
-                    let card = document.createElement("article");
-                    card.className = "resource-card";
-                    let icon = document.createElement("div");
-                    icon.className = "resource-icon";
-                    icon.innerHTML = '<i class="fa-solid fa-file-lines"></i>';
-                    let title = document.createElement("h2");
-                    title.textContent = item.judul;
-                    let summary = document.createElement("p");
-                    summary.textContent = item.ringkasan;
-                    let link = document.createElement("a");
-                    link.className = "resource-link";
-                    link.href = item.video_url || "modul.html";
-                    link.target = item.video_url ? "_blank" : "_self";
-                    link.textContent = item.video_url ? "Tonton materi" : "Buka modul";
-                    card.append(icon, title, summary, link);
-                    grid.prepend(card);
-                });
-            });
-    </script>
+
+    <script src="../script.js?v=20260923-progress"></script>
 </body>
 </html>

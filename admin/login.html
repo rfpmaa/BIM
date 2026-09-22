@@ -18,6 +18,10 @@
         .admin-field label { display: block; color: #334155; font-size: 13px; font-weight: 600; margin-bottom: 7px; }
         .admin-field input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
         .admin-field input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); }
+        .password-wrapper { position: relative; }
+        .password-wrapper input { padding-right: 45px; }
+        .toggle-password { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); border: none; background: transparent; color: #64748b; cursor: pointer; padding: 4px; font-size: 15px; }
+        .toggle-password:hover, .toggle-password:focus { color: #2563eb; }
         .admin-login-button { width: 100%; border: 0; border-radius: 8px; padding: 12px; background: #2563eb; color: white; font-weight: 700; cursor: pointer; }
         .admin-login-button:hover { background: #1d4ed8; }
         .admin-login-note { min-height: 18px; margin-bottom: 14px; color: #b91c1c; font-size: 13px; text-align: center; }
@@ -28,14 +32,31 @@
     <main class="admin-login-card">
         <div class="admin-login-brand"><i class="fa-solid fa-chalkboard-user"></i><h1>Portal Guru</h1><p>Kelola materi dan pantau progres siswa.</p></div>
         <form id="admin-login-form">
-            <div class="admin-field"><label for="admin-email">Email Guru</label><input id="admin-email" type="email" autocomplete="email" required></div>
-            <div class="admin-field"><label for="admin-password">Password</label><input id="admin-password" type="password" autocomplete="current-password" required></div>
+            <div class="admin-field"><label for="admin-email">Email Guru</label><input id="admin-email" name="email" type="email" autocomplete="email" required></div>
+            <div class="admin-field">
+                <label for="admin-password">Password</label>
+                <div class="password-wrapper">
+                    <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('admin-password', this)" aria-label="Tampilkan password" title="Tampilkan password">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
             <div id="admin-login-note" class="admin-login-note" role="alert"></div>
             <button class="admin-login-button" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Masuk sebagai Guru</button>
         </form>
         <a class="admin-back-link" href="../user/login.html">Kembali ke login siswa</a>
     </main>
     <script>
+        function togglePassword(inputId, button) {
+            const passwordInput = document.getElementById(inputId);
+            const isPasswordHidden = passwordInput.type === "password";
+            passwordInput.type = isPasswordHidden ? "text" : "password";
+            button.innerHTML = isPasswordHidden ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+            button.setAttribute("aria-label", isPasswordHidden ? "Sembunyikan password" : "Tampilkan password");
+            button.setAttribute("title", isPasswordHidden ? "Sembunyikan password" : "Tampilkan password");
+        }
+
         document.getElementById("admin-login-form").addEventListener("submit", function(event) {
             event.preventDefault();
             let note = document.getElementById("admin-login-note");

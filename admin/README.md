@@ -2,15 +2,22 @@
 
 Halaman admin berada di `admin/login.html`. Setelah login, menu dipisahkan menjadi file masing-masing.
 
-## Mengaktifkan akun guru
+## Membuat akun admin
 
-Daftarkan akun melalui halaman biasa, lalu ubah role akun tersebut dari phpMyAdmin atau MySQL:
+Buat hash password menggunakan PHP:
 
-```sql
-UPDATE user SET role = 'guru' WHERE email = 'email-guru@contoh.com';
+```powershell
+php -r "echo password_hash('PasswordAdminAnda', PASSWORD_DEFAULT), PHP_EOL;"
 ```
 
-Kolom `role`, tabel `materi`, dan tabel `progres_siswa` dibuat otomatis saat endpoint aplikasi dipanggil.
+Lalu masukkan akun ke tabel `admin` melalui phpMyAdmin atau MySQL:
+
+```sql
+INSERT INTO admin (nama, email, password)
+VALUES ('Nama Admin', 'admin@contoh.com', 'HASH_PASSWORD_DARI_PERINTAH_PHP');
+```
+
+Tabel `admin`, `materi`, dan `progres_siswa` dibuat otomatis saat endpoint aplikasi dipanggil. Akun siswa tetap berada di tabel `user`.
 
 ## Struktur
 
