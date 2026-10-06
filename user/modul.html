@@ -27,6 +27,7 @@
         .module-meta { display: flex; gap: 16px; padding: 0 22px 17px; color: #64748b; font-size: 12px; }
         .module-meta span { display: inline-flex; align-items: center; gap: 6px; }
         .module-content { border-top: 1px solid #f1f5f9; padding: 0 22px; }
+        .module-content { display: none; }
         .module-content summary { cursor: pointer; color: #334155; font-size: 13px; font-weight: 600; padding: 15px 0; list-style: none; display: flex; justify-content: space-between; }
         .module-content summary::-webkit-details-marker { display: none; }
         .module-content summary::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: #94a3b8; }
@@ -34,6 +35,8 @@
         .lesson-list { list-style: none; border-top: 1px solid #f1f5f9; padding: 12px 0 5px; margin: 0; }
         .lesson-list li { display: flex; align-items: center; gap: 9px; color: #64748b; font-size: 13px; margin-bottom: 11px; }
         .lesson-list i { color: #2563eb; width: 16px; text-align: center; }
+        .module-open-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 13px; color: #2563eb; font-size: 12px; font-weight: 700; text-decoration: none; }
+        .module-open-link:hover { text-decoration: underline; }
         .module-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #f8fafc; padding: 15px 22px; }
         .module-progress { flex: 1; }
         .module-progress-label { display: flex; justify-content: space-between; color: #64748b; font-size: 11px; margin-bottom: 6px; }
@@ -53,7 +56,7 @@
         }
     </style>
 </head>
-<body>
+<body class="student-page">
 
     <!-- SIDEBAR KIRI -->
     <div class="sidebar">
@@ -64,9 +67,8 @@
         <ul>
             <li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
             <li><a href="modul.html" class="active"><i class="fa-solid fa-book"></i> Modul</a></li>
-            <li><a href="video.html"><i class="fa-solid fa-circle-play"></i> Video</a></li>
-            <li><a href="simulasi.html"><i class="fa-solid fa-cubes"></i> Simulasi 3D</a></li>
             <li><a href="latihan.html"><i class="fa-solid fa-clipboard-check"></i> Latihan</a></li>
+            <li><a href="pengumpulan-tugas.html"><i class="fa-solid fa-file-arrow-up"></i> Pengumpulan Tugas</a></li>
             <li><a href="progres.html"><i class="fa-solid fa-chart-line"></i> Progress</a></li>
             <!-- Cek Login di menu profil -->
             <li><a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a></li>
@@ -94,6 +96,7 @@
                     <div>
                         <h2>1. Pengenalan BIM</h2>
                         <p class="description">Dasar, konsep, dan manfaat BIM untuk alur kerja konstruksi modern.</p>
+                        <a class="module-open-link" href="modul-1.html">Buka Modul 1 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div class="module-meta">
@@ -103,7 +106,7 @@
                 <details class="module-content" open>
                     <summary>Materi yang dipelajari</summary>
                     <ul class="lesson-list">
-                        <li><i class="fa-solid fa-circle-play"></i> Apa itu Building Information Modeling?</li>
+                        <li><i class="fa-solid fa-book-open"></i> Apa itu Building Information Modeling?</li>
                         <li><i class="fa-solid fa-file-lines"></i> Manfaat BIM dalam proyek</li>
                         <li><i class="fa-solid fa-list-check"></i> Alur kerja dan istilah dasar BIM</li>
                     </ul>
@@ -123,6 +126,7 @@
                     <div>
                         <h2>2. Pemodelan 3D</h2>
                         <p class="description">Praktik membuat model bangunan tiga dimensi menggunakan Revit.</p>
+                        <a class="module-open-link" href="modul-2.html">Buka Modul 2 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div class="module-meta">
@@ -152,6 +156,7 @@
                     <div>
                         <h2>3. Kolaborasi &amp; BIM 360</h2>
                         <p class="description">Kerja tim dalam proyek dengan pembagian informasi yang terkoordinasi.</p>
+                        <a class="module-open-link" href="modul-3.html">Buka Modul 3 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div class="module-meta">
@@ -181,6 +186,7 @@
                     <div>
                         <h2>4. Manajemen Proyek</h2>
                         <p class="description">Memahami 4D, 5D, dan visualisasi untuk membantu pengambilan keputusan.</p>
+                        <a class="module-open-link" href="modul-4.html">Buka Modul 4 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div class="module-meta">
@@ -207,7 +213,7 @@
     </div>
 
     <!-- Menghubungkan ke JavaScript -->
-    <script src="../script.js?v=20260923-progress-status"></script>
+    <script src="../script.js?v=20261007-sidebar-flow"></script>
     <script>
         document.querySelectorAll(".complete-btn").forEach(function(button) {
             button.addEventListener("click", function() {
@@ -252,23 +258,9 @@
                     const item = items[0] || null;
                     const title = card.querySelector("h2");
                     const description = card.querySelector(".description");
-                    const lessonList = card.querySelector(".lesson-list");
 
                     if (title) title.textContent = `${moduleNo}. ${item ? item.judul : ["Pengenalan BIM", "Pemodelan 3D", "Kolaborasi & BIM 360", "Manajemen Proyek"][index]}`;
                     if (description) description.textContent = item ? item.ringkasan : "Materi pembelajaran ini belum tersedia.";
-                    if (lessonList) {
-                        lessonList.innerHTML = "";
-                        const list = item ? (item.isi || "Materi pembelajaran tersedia.").split(/\n|\.|;|:/).filter(Boolean).slice(0, 4) : [
-                            "Apa itu BIM?",
-                            "Manfaat BIM dalam proyek",
-                            "Alur kerja dan istilah dasar"
-                        ];
-                        list.forEach(text => {
-                            const li = document.createElement("li");
-                            li.innerHTML = '<i class="fa-solid fa-circle-play"></i> ' + text.trim();
-                            lessonList.appendChild(li);
-                        });
-                    }
                 });
             } catch (error) {
                 console.error("Gagal memuat materi publik:", error);

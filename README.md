@@ -10,15 +10,21 @@ BIM/
 |  |- index.html         Beranda
 |  |- login.html         Login dan registrasi siswa
 |  |- modul.html         Daftar modul
-|  |- video.html         Materi/video
+|  |- modul-1.html       Detail Modul 1
+|  |- modul-2.html       Detail Modul 2
+|  |- modul-3.html       Detail Modul 3
+|  |- modul-4.html       Detail Modul 4
+|  |- modul-detail.js    Materi dan video detail modul
+|  |- modul-detail.css   Gaya detail modul
 |  |- latihan.html       Latihan
 |  |- progres.html       Progress siswa
 |  |- profil.html        Profil siswa
-|  `- simulasi.html      Simulasi 3D
+|  `- pengumpulan-tugas.html Kirim file tugas
 |- admin/                Portal guru
 |  |- login.html         Login guru
 |  |- dashboard.html     Ringkasan dashboard
 |  |- materi.html        Kelola materi
+|  |- tugas.html         Lihat file tugas siswa
 |  |- siswa.html         Lihat progres siswa
 |  `- admin.js           Navigasi dan fungsi bersama admin
 |- style.css             Gaya bersama halaman siswa dan admin

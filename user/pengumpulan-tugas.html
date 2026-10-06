@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumpulan Tugas - BIM Learn</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .submission-heading { margin-bottom: 24px; }
+        .submission-heading h1 { color: #1e293b; font-size: 28px; margin: 0 0 8px; }
+        .submission-heading p { color: #64748b; font-size: 14px; margin: 0; }
+        .submission-panel { max-width: 760px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; padding: 22px; }
+        .submission-form { display: grid; gap: 16px; }
+        .submission-form label { display: grid; gap: 7px; color: #334155; font-size: 13px; font-weight: 600; }
+        .submission-form select, .submission-form input[type="file"] { width: 100%; min-width: 0; box-sizing: border-box; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; padding: 11px; color: #334155; font: inherit; font-size: 13px; }
+        .submission-hint { color: #64748b; font-size: 12px; font-weight: 400; line-height: 1.5; }
+        .submission-submit { justify-self: start; border: 0; border-radius: 7px; background: #2563eb; color: #fff; padding: 11px 15px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; }
+        .submission-submit:disabled { opacity: .65; cursor: wait; }
+        .submission-status { min-height: 18px; color: #64748b; font-size: 13px; }
+        .submission-status.error { color: #b91c1c; }
+        .submission-status.success { color: #15803d; }
+        .history-heading { color: #1e293b; font-size: 17px; margin: 30px 0 12px; }
+        .submission-history { display: grid; gap: 8px; }
+        .submission-entry { display: flex; justify-content: space-between; gap: 14px; border-bottom: 1px solid #e2e8f0; padding: 12px 0; color: #475569; font-size: 13px; }
+        .submission-entry strong { display: block; color: #334155; overflow-wrap: anywhere; }
+        .submission-entry small { display: block; color: #64748b; margin-top: 5px; }
+        .submission-entry time { flex: 0 0 auto; color: #64748b; font-size: 12px; }
+        .history-empty { color: #64748b; font-size: 13px; }
+        @media(max-width: 560px) { .submission-panel { padding: 16px; } .submission-entry { flex-direction: column; gap: 6px; } }
+    </style>
+</head>
+<body class="student-page">
+    <aside class="sidebar">
+        <div class="logo"><i class="fa-solid fa-cube" aria-hidden="true"></i><span>BIM Learn</span></div>
+        <nav aria-label="Navigasi siswa">
+            <ul>
+                <li><a href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i> Beranda</a></li>
+                <li><a href="modul.html"><i class="fa-solid fa-book" aria-hidden="true"></i> Modul</a></li>
+                <li><a href="latihan.html"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> Latihan</a></li>
+                <li><a href="pengumpulan-tugas.html" class="active"><i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i> Pengumpulan Tugas</a></li>
+                <li><a href="progres.html"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Progress</a></li>
+                <li><a href="profil.html"><i class="fa-solid fa-user" aria-hidden="true"></i> Profil</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="submission-heading">
+            <h1>Pengumpulan Tugas</h1>
+            <p>Pilih modul, lalu kirim file tugas untuk diperiksa guru.</p>
+        </header>
+
+        <section class="submission-panel" aria-label="Kirim file tugas">
+            <form class="submission-form" id="submission-form">
+                <label for="submission-module">Modul tugas
+                    <select id="submission-module" name="modul" required>
+                        <option value="">Pilih modul</option>
+                        <option value="1">Modul 1 · Pengenalan BIM</option>
+                        <option value="2">Modul 2 · Pemodelan 3D</option>
+                        <option value="3">Modul 3 · Kolaborasi &amp; BIM 360</option>
+                        <option value="4">Modul 4 · Manajemen Proyek</option>
+                    </select>
+                </label>
+                <label for="submission-file">File tugas
+                    <input id="submission-file" name="file_tugas" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.jpg,.jpeg,.png" required>
+                    <span class="submission-hint">PDF, Word, Excel, PowerPoint, ZIP, JPG, atau PNG. Maksimal 10 MB.</span>
+                </label>
+                <button class="submission-submit" type="submit"><i class="fa-solid fa-upload" aria-hidden="true"></i> Kirim tugas</button>
+                <p id="submission-status" class="submission-status" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <h2 class="history-heading">Riwayat kiriman</h2>
+        <div id="submission-history" class="submission-history" aria-live="polite"></div>
+    </main>
+
+    <script src="../script.js?v=20261007-sidebar-flow"></script>
+    <script>
+        const assignmentModules = ["", "Pengenalan BIM", "Pemodelan 3D", "Kolaborasi & BIM 360", "Manajemen Proyek"];
+        const submissionForm = document.getElementById("submission-form");
+        const submissionStatus = document.getElementById("submission-status");
+        const submissionHistory = document.getElementById("submission-history");
+
+        function formatSubmissionSize(bytes) {
+            const size = Number(bytes);
+            return size >= 1048576 ? (size / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(size / 1024)) + " KB";
+        }
+
+        async function readSubmissionResponse(response) {
+            try {
+                return await response.json();
+            } catch (error) {
+                throw new Error("Server tidak dapat membaca data tugas. Periksa koneksi database lalu coba lagi.");
+            }
+        }
+
+        function renderSubmissionHistory(items) {
+            submissionHistory.replaceChildren();
+            if (!items.length) {
+                const empty = document.createElement("p");
+                empty.className = "history-empty";
+                empty.textContent = "Belum ada tugas yang dikirim.";
+                submissionHistory.appendChild(empty);
+                return;
+            }
+
+            items.forEach(function(item) {
+                const entry = document.createElement("div");
+                entry.className = "submission-entry";
+                const details = document.createElement("div");
+                const name = document.createElement("strong");
+                name.textContent = item.original_name;
+                const module = document.createElement("small");
+                module.textContent = "Modul " + item.modul + " · " + (assignmentModules[Number(item.modul)] || "") + " · " + formatSubmissionSize(item.file_size);
+                details.append(name, module);
+                const date = document.createElement("time");
+                date.dateTime = item.submitted_at;
+                date.textContent = new Date(item.submitted_at.replace(" ", "T")).toLocaleString("id-ID");
+                entry.append(details, date);
+                submissionHistory.appendChild(entry);
+            });
+        }
+
+        async function loadSubmissionHistory() {
+            const response = await fetch("../tugas_api.php", { credentials: "same-origin", cache: "no-store" });
+            const result = await readSubmissionResponse(response);
+            if (!response.ok || result.status !== "success") throw new Error(result.message || "Riwayat kiriman gagal dimuat.");
+            renderSubmissionHistory(result.data || []);
+        }
+
+        submissionForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const submit = submissionForm.querySelector("button[type=submit]");
+            const file = document.getElementById("submission-file").files[0];
+            if (!file) return;
+
+            const body = new FormData(submissionForm);
+            submit.disabled = true;
+            submissionStatus.className = "submission-status";
+            submissionStatus.textContent = "Mengirim file...";
+            try {
+                const response = await fetch("../tugas_api.php", { method: "POST", body, credentials: "same-origin" });
+                const result = await readSubmissionResponse(response);
+                if (!response.ok || result.status !== "success") throw new Error(result.message || "File gagal dikirim.");
+                submissionStatus.classList.add("success");
+                submissionStatus.textContent = result.message;
+                submissionForm.reset();
+                await loadSubmissionHistory();
+            } catch (error) {
+                submissionStatus.classList.add("error");
+                submissionStatus.textContent = error.message;
+            } finally {
+                submit.disabled = false;
+            }
+        });
+
+        loadSubmissionHistory().catch(error => {
+            const message = document.createElement("p");
+            message.className = "history-empty";
+            message.textContent = error.message;
+            submissionHistory.replaceChildren(message);
+        });
+    </script>
+</body>
+</html>

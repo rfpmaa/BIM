@@ -288,6 +288,7 @@ function sinkronkanProgressDariServer() {
 // 4. JALANKAN OTOMATIS SAAT HALAMAN APAPUN DIBUKA
 // ==========================================
 document.addEventListener("DOMContentLoaded", function() {
+    initStudentSidebar();
     verifikasiSesi();
     sinkronkanProfilDariServer();
     sinkronkanProgressDariServer();
@@ -358,3 +359,66 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
+
+function initStudentSidebar() {
+    if (!document.body.classList.contains("student-page")) return;
+
+    let sidebar = document.querySelector(".sidebar");
+    if (!sidebar) return;
+
+    let toggle = document.createElement("button");
+    toggle.className = "sidebar-toggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-controls", "student-sidebar");
+    toggle.setAttribute("aria-expanded", "true");
+    toggle.setAttribute("aria-label", "Tutup menu navigasi");
+    toggle.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
+    sidebar.id = "student-sidebar";
+
+    let backdrop = document.createElement("button");
+    backdrop.className = "sidebar-backdrop";
+    backdrop.type = "button";
+    backdrop.setAttribute("aria-label", "Tutup menu navigasi");
+    let mainContent = document.querySelector(".main-content");
+    if (!mainContent) return;
+    mainContent.prepend(toggle);
+    document.body.appendChild(backdrop);
+
+    let mobileQuery = window.matchMedia("(max-width: 760px)");
+
+    function setMenuState(open) {
+        if (mobileQuery.matches) {
+            document.body.classList.toggle("sidebar-open", open);
+        } else {
+            document.body.classList.toggle("sidebar-collapsed", !open);
+        }
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.setAttribute("aria-label", open ? "Tutup menu navigasi" : "Buka menu navigasi");
+        toggle.innerHTML = '<i class="fa-solid fa-' + (open ? "xmark" : "bars") + '" aria-hidden="true"></i>';
+    }
+
+    function syncViewport() {
+        document.body.classList.remove("sidebar-open", "sidebar-collapsed");
+        setMenuState(!mobileQuery.matches);
+    }
+
+    toggle.addEventListener("click", function() {
+        setMenuState(toggle.getAttribute("aria-expanded") !== "true");
+    });
+    backdrop.addEventListener("click", function() {
+        setMenuState(false);
+    });
+    sidebar.querySelectorAll("a").forEach(function(link) {
+        link.addEventListener("click", function() {
+            if (mobileQuery.matches) setMenuState(false);
+        });
+    });
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape" && document.body.classList.contains("sidebar-open")) {
+            setMenuState(false);
+            toggle.focus();
+        }
+    });
+    mobileQuery.addEventListener("change", syncViewport);
+    syncViewport();
+}

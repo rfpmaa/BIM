@@ -68,6 +68,18 @@ function ensureApplicationTables($conn) {
     ensureColumnExists($conn, 'user', 'role', "VARCHAR(20) NOT NULL DEFAULT 'siswa'");
     $conn->query("UPDATE `user` SET role = 'siswa' WHERE role IS NULL OR TRIM(role) = ''");
 
+    $conn->query("CREATE TABLE IF NOT EXISTS `pengumpulan_tugas` (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        modul TINYINT UNSIGNED NOT NULL,
+        original_name VARCHAR(255) NOT NULL,
+        stored_name CHAR(48) NOT NULL UNIQUE,
+        file_size BIGINT UNSIGNED NOT NULL,
+        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_pengumpulan_user (user_id),
+        INDEX idx_pengumpulan_modul (modul)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
     $materiExists = $conn->query("SHOW TABLES LIKE 'materi'");
     if ($materiExists && $materiExists->num_rows === 0) {
         $conn->query("CREATE TABLE IF NOT EXISTS `materi` (

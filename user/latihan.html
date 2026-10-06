@@ -22,7 +22,7 @@
         #quiz-result { color: #1d4ed8; font-size: 15px; font-weight: 600; margin-top: 18px; }
     </style>
 </head>
-<body>
+<body class="student-page">
     <aside class="sidebar">
         <div class="logo">
             <i class="fa-solid fa-cube" aria-hidden="true"></i>
@@ -32,9 +32,8 @@
             <ul>
                 <li><a href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i> Beranda</a></li>
                 <li><a href="modul.html"><i class="fa-solid fa-book" aria-hidden="true"></i> Modul</a></li>
-                <li><a href="video.html"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> Video</a></li>
-                <li><a href="simulasi.html"><i class="fa-solid fa-cubes" aria-hidden="true"></i> Simulasi 3D</a></li>
                 <li><a href="latihan.html" class="active"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> Latihan</a></li>
+                <li><a href="pengumpulan-tugas.html"><i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i> Pengumpulan Tugas</a></li>
                 <li><a href="progres.html"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Progress</a></li>
                 <li><a href="profil.html"><i class="fa-solid fa-user" aria-hidden="true"></i> Profil</a></li>
             </ul>
@@ -83,7 +82,7 @@
         </form>
     </main>
 
-    <script src="../script.js?v=20260923-progress"></script>
+    <script src="../script.js?v=20261007-sidebar-flow"></script>
     <script>
         document.getElementById("quiz-form").addEventListener("submit", function(event) {
             event.preventDefault();

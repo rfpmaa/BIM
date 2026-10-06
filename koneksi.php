@@ -5,10 +5,10 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/admin_guard.php';
 
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db   = "bim";
+$host = "sql108.infinityfree.com";
+$user = "if0_43104263";
+$pass = "bimjosjis";
+$db   = "if0_43104263_bim";
 
 $conn = new mysqli($host, $user, $pass, $db);
 

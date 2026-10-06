@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul 4 - BIM Learn</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="modul-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+</head>
+<body class="student-page" data-module="4">
+    <aside class="sidebar">
+        <div class="logo"><i class="fa-solid fa-cube" aria-hidden="true"></i><span>BIM Learn</span></div>
+        <nav aria-label="Navigasi siswa"><ul>
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
+            <li><a href="modul.html" class="active"><i class="fa-solid fa-book"></i> Modul</a></li>
+            <li><a href="latihan.html"><i class="fa-solid fa-clipboard-check"></i> Latihan</a></li>
+            <li><a href="pengumpulan-tugas.html"><i class="fa-solid fa-file-arrow-up"></i> Pengumpulan Tugas</a></li>
+            <li><a href="progres.html"><i class="fa-solid fa-chart-line"></i> Progress</a></li>
+            <li><a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a></li>
+        </ul></nav>
+    </aside>
+    <main class="main-content">
+        <a class="module-back-link" href="modul.html"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Semua modul</a>
+        <header class="module-detail-header">
+            <div><h1 id="module-title" class="module-detail-title"></h1><p id="module-description" class="module-detail-description"></p></div>
+            <div id="module-number" class="module-detail-number" aria-hidden="true"></div>
+        </header>
+        <section id="module-material-list" class="module-detail-panel" aria-label="Materi Modul 4" aria-live="polite"><p class="module-empty">Memuat materi...</p></section>
+        <footer class="module-detail-footer">
+            <div class="module-progress"><div class="module-progress-label"><span>Progress modul</span><span id="module-progress-text-4">0%</span></div><div class="module-progress-bar"><div class="module-progress-fill" id="module-progress-bar-4"></div></div></div>
+            <button class="complete-btn" type="button"><i class="fa-solid fa-check" aria-hidden="true"></i> Tandai selesai</button>
+        </footer>
+    </main>
+    <script src="../script.js?v=20261007-sidebar-flow"></script>
+    <script src="modul-detail.js"></script>
+</body>
+</html>

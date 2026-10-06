@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Tugas Siswa - BIM Learn</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:26px}
+        .admin-heading h1{color:#1e293b;font-size:27px;margin:0 0 7px}
+        .admin-heading p{color:#64748b;font-size:14px;margin:0}
+        .admin-logout{border:1px solid #fecaca;background:#fff1f2;color:#b91c1c;border-radius:8px;padding:9px 13px;cursor:pointer;font-weight:600}
+        .submission-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+        .submission-toolbar input,.submission-toolbar select{min-width:0;border:1px solid #cbd5e1;border-radius:7px;background:#fff;padding:10px 12px;color:#334155;font:inherit;font-size:13px}
+        .submission-toolbar input{flex:1}
+        .submission-list{display:grid;gap:10px}
+        .submission-card{display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid #e2e8f0;border-radius:9px;background:#fff;padding:15px}
+        .submission-details{min-width:0}
+        .submission-details h2{overflow-wrap:anywhere;color:#1e293b;font-size:14px;margin:0 0 7px}
+        .submission-details p{color:#64748b;font-size:12px;line-height:1.6;margin:0}
+        .submission-module{color:#1d4ed8;font-weight:700}
+        .submission-download{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;border-radius:7px;background:#2563eb;color:#fff;padding:9px 12px;text-decoration:none;font-size:12px;font-weight:700}
+        .submission-download:hover{background:#1d4ed8}
+        .submission-empty{border:1px dashed #cbd5e1;border-radius:9px;padding:24px;text-align:center;color:#64748b;font-size:13px}
+        .admin-mobile-toggle{display:none;width:42px;height:42px;place-items:center;margin:0 0 18px;border:1px solid #dbe3ed;border-radius:8px;background:#fff;color:#243141;box-shadow:0 3px 12px rgba(15,23,42,.12);cursor:pointer}
+        .admin-mobile-backdrop{display:none;position:fixed;inset:0;z-index:1000;border:0;background:rgba(15,23,42,.48)}
+        @media(max-width:760px){
+            .admin-tugas-page .main-content{width:100%;min-width:0;margin-left:0;padding:18px;}
+            .admin-tugas-page .admin-mobile-toggle{display:grid;}
+            .admin-tugas-page .sidebar{transform:translateX(-100%);transition:transform .25s ease;}
+            .admin-tugas-page.admin-menu-open .sidebar{transform:translateX(0);}
+            .admin-tugas-page.admin-menu-open .admin-mobile-backdrop{display:block;}
+        }
+        @media(max-width:650px){.admin-heading{align-items:flex-start;flex-direction:column;gap:15px}.submission-toolbar{align-items:stretch;flex-direction:column}.submission-card{align-items:flex-start;flex-direction:column}}
+    </style>
+</head>
+<body class="admin-tugas-page" data-admin-page="tugas">
+    <div id="admin-sidebar"></div>
+    <main class="main-content">
+        <header class="admin-heading">
+            <div>
+                <h1>File Tugas Siswa</h1>
+                <p>Lihat dan unduh file yang dikirim siswa per modul.</p>
+            </div>
+            <button class="admin-logout" id="admin-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+        </header>
+
+        <div id="admin-notice" style="display:none"></div>
+        <section aria-label="Daftar file tugas">
+            <div class="submission-toolbar">
+                <input id="submission-search" type="search" placeholder="Cari nama siswa atau file..." aria-label="Cari kiriman tugas">
+                <select id="submission-module" aria-label="Filter modul">
+                    <option value="">Semua modul</option>
+                    <option value="1">Modul 1</option>
+                    <option value="2">Modul 2</option>
+                    <option value="3">Modul 3</option>
+                    <option value="4">Modul 4</option>
+                </select>
+            </div>
+            <p id="submission-count" style="color:#64748b;font-size:12px;margin:0 0 12px"></p>
+            <div class="submission-list" id="submission-list" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <script src="admin.js"></script>
+    <script>
+        const moduleNames = ["", "Pengenalan BIM", "Pemodelan 3D", "Kolaborasi & BIM 360", "Manajemen Proyek"];
+        let submissions = [];
+
+        function formatFileSize(bytes) {
+            const size = Number(bytes);
+            return size >= 1048576 ? (size / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(size / 1024)) + " KB";
+        }
+
+        async function readTaskResponse(response) {
+            try {
+                return await response.json();
+            } catch (error) {
+                throw new Error("Server tidak dapat membaca daftar tugas. Periksa koneksi database lalu coba lagi.");
+            }
+        }
+
+        function renderSubmissions() {
+            const keyword = document.getElementById("submission-search").value.trim().toLowerCase();
+            const selectedModule = document.getElementById("submission-module").value;
+            const filtered = submissions.filter(item => {
+                const matchesSearch = [item.nama, item.email, item.original_name, item.kelas]
+                    .some(value => String(value || "").toLowerCase().includes(keyword));
+                return matchesSearch && (!selectedModule || Number(item.modul) === Number(selectedModule));
+            });
+
+            const list = document.getElementById("submission-list");
+            list.replaceChildren();
+            document.getElementById("submission-count").textContent = filtered.length + " file tugas";
+
+            if (!filtered.length) {
+                const empty = document.createElement("p");
+                empty.className = "submission-empty";
+                empty.textContent = submissions.length ? "Tidak ada file yang sesuai dengan pencarian." : "Belum ada file tugas yang dikirim.";
+                list.appendChild(empty);
+                return;
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement("article");
+                card.className = "submission-card";
+                const details = document.createElement("div");
+                details.className = "submission-details";
+                const fileName = document.createElement("h2");
+                fileName.textContent = item.original_name;
+                const meta = document.createElement("p");
+                const module = document.createElement("span");
+                module.className = "submission-module";
+                module.textContent = "Modul " + Number(item.modul) + " · " + (moduleNames[Number(item.modul)] || "");
+                const student = document.createElement("span");
+                student.textContent = item.nama + " · " + item.email + (item.kelas ? " · " + item.kelas : "");
+                const submittedAt = document.createElement("span");
+                submittedAt.textContent = new Date(item.submitted_at.replace(" ", "T")).toLocaleString("id-ID") + " · " + formatFileSize(item.file_size);
+                meta.append(module, document.createElement("br"), student, document.createElement("br"), submittedAt);
+                details.append(fileName, meta);
+
+                const download = document.createElement("a");
+                download.className = "submission-download";
+                download.href = "../tugas_file.php?id=" + encodeURIComponent(item.id);
+                download.innerHTML = '<i class="fa-solid fa-download" aria-hidden="true"></i> Unduh';
+                download.setAttribute("aria-label", "Unduh " + item.original_name);
+                card.append(details, download);
+                list.appendChild(card);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const sidebar = document.querySelector("#admin-sidebar .sidebar");
+            const main = document.querySelector(".main-content");
+            if (!sidebar || !main) return;
+
+            const toggle = document.createElement("button");
+            toggle.className = "admin-mobile-toggle";
+            toggle.type = "button";
+            toggle.setAttribute("aria-controls", "admin-sidebar");
+            toggle.setAttribute("aria-expanded", "false");
+            toggle.setAttribute("aria-label", "Buka menu admin");
+            toggle.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
+            main.prepend(toggle);
+
+            const backdrop = document.createElement("button");
+            backdrop.className = "admin-mobile-backdrop";
+            backdrop.type = "button";
+            backdrop.setAttribute("aria-label", "Tutup menu admin");
+            document.body.appendChild(backdrop);
+
+            function setMenuOpen(open) {
+                document.body.classList.toggle("admin-menu-open", open);
+                toggle.setAttribute("aria-expanded", String(open));
+                toggle.setAttribute("aria-label", open ? "Tutup menu admin" : "Buka menu admin");
+                toggle.innerHTML = '<i class="fa-solid fa-' + (open ? "xmark" : "bars") + '" aria-hidden="true"></i>';
+            }
+
+            toggle.addEventListener("click", function() {
+                setMenuOpen(!document.body.classList.contains("admin-menu-open"));
+            });
+            backdrop.addEventListener("click", function() { setMenuOpen(false); });
+            sidebar.querySelectorAll("a").forEach(link => link.addEventListener("click", function() { setMenuOpen(false); }));
+            document.addEventListener("keydown", function(event) {
+                if (event.key === "Escape") setMenuOpen(false);
+            });
+        });
+
+        fetch("../tugas_admin_api.php?t=" + Date.now(), { credentials: "same-origin", cache: "no-store" })
+            .then(response => {
+                if (response.status === 403) {
+                    location.href = "login.html";
+                    return null;
+                }
+                return readTaskResponse(response);
+            })
+            .then(result => {
+                if (!result) return;
+                if (result.status !== "success") throw new Error(result.message || "Kiriman tugas gagal dimuat.");
+                submissions = result.data || [];
+                renderSubmissions();
+            })
+            .catch(error => showAdminNotice(error.message || "Kiriman tugas gagal dimuat.", "error"));
+
+        document.getElementById("submission-search").addEventListener("input", renderSubmissions);
+        document.getElementById("submission-module").addEventListener("change", renderSubmissions);
+    </script>
+</body>
+</html>

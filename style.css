@@ -68,8 +68,13 @@ body {
     padding: 25px 20px;
     position: fixed;
     height: 100vh;
+    height: 100dvh;
+    inset: 0 auto 0 0;
+    overflow-y: auto;
+    z-index: 1001;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
+    transition: transform 0.25s ease;
 }
 
 .sidebar .logo {
@@ -119,6 +124,106 @@ body {
     margin-left: 260px; /* Memberi ruang untuk sidebar */
     flex: 1;
     padding: 30px 50px;
+    min-width: 0;
+}
+
+.student-page .sidebar-toggle {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    align-self: flex-start;
+    place-items: center;
+    margin: 0 0 18px;
+    border: 1px solid #dbe3ed;
+    border-radius: 8px;
+    background: #fff;
+    color: #243141;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.12);
+    cursor: pointer;
+}
+
+.student-page .sidebar-toggle i {
+    font-size: 17px;
+}
+
+.student-page .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    border: 0;
+    background: rgba(15, 23, 42, 0.48);
+    cursor: pointer;
+}
+
+.student-page:not(.sidebar-collapsed) .sidebar {
+    transform: translateX(0);
+}
+
+.student-page.sidebar-collapsed .sidebar {
+    transform: translateX(-100%);
+}
+
+.student-page.sidebar-collapsed .main-content {
+    margin-left: 0;
+}
+
+@media (max-width: 760px) {
+    .student-page .sidebar {
+        width: min(290px, calc(100vw - 56px));
+        transform: translateX(-100%);
+        border-radius: 0 14px 14px 0;
+    }
+
+    .student-page:not(.sidebar-open) .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .student-page.sidebar-open .sidebar {
+        transform: translateX(0);
+    }
+
+    .student-page.sidebar-open .sidebar-backdrop {
+        display: block;
+    }
+
+    .student-page .main-content {
+        margin-left: 0;
+        padding: 18px 18px 28px;
+    }
+
+    .student-page .top-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .student-page .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .student-page .hero-banner {
+        padding: 28px 24px;
+    }
+
+    .student-page .hero-text {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .student-page .main-content {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+
+    .student-page .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .student-page .hero-banner {
+        padding: 24px 20px;
+    }
 }
 
 /* Header (Atas) */
@@ -127,12 +232,6 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-}
-
-.greeting h2 {
-    color: #1a202c;
-    font-size: 24px;
-    margin-bottom: 5px;
 }
 
 .greeting p {
