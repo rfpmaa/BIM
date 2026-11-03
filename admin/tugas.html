@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Tugas Siswa - BIM Learn</title>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../style.css?v=20261104-sidebar-toggle-3">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -24,14 +24,8 @@
         .submission-download{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;border-radius:7px;background:#2563eb;color:#fff;padding:9px 12px;text-decoration:none;font-size:12px;font-weight:700}
         .submission-download:hover{background:#1d4ed8}
         .submission-empty{border:1px dashed #cbd5e1;border-radius:9px;padding:24px;text-align:center;color:#64748b;font-size:13px}
-        .admin-mobile-toggle{display:none;width:42px;height:42px;place-items:center;margin:0 0 18px;border:1px solid #dbe3ed;border-radius:8px;background:#fff;color:#243141;box-shadow:0 3px 12px rgba(15,23,42,.12);cursor:pointer}
-        .admin-mobile-backdrop{display:none;position:fixed;inset:0;z-index:1000;border:0;background:rgba(15,23,42,.48)}
         @media(max-width:760px){
             .admin-tugas-page .main-content{width:100%;min-width:0;margin-left:0;padding:18px;}
-            .admin-tugas-page .admin-mobile-toggle{display:grid;}
-            .admin-tugas-page .sidebar{transform:translateX(-100%);transition:transform .25s ease;}
-            .admin-tugas-page.admin-menu-open .sidebar{transform:translateX(0);}
-            .admin-tugas-page.admin-menu-open .admin-mobile-backdrop{display:block;}
         }
         @media(max-width:650px){.admin-heading{align-items:flex-start;flex-direction:column;gap:15px}.submission-toolbar{align-items:stretch;flex-direction:column}.submission-card{align-items:flex-start;flex-direction:column}}
     </style>
@@ -64,7 +58,7 @@
         </section>
     </main>
 
-    <script src="admin.js"></script>
+    <script src="admin.js?v=20261104-sidebar-toggle-3"></script>
     <script>
         const moduleNames = ["", "Pengenalan BIM", "Pemodelan 3D", "Kolaborasi & BIM 360", "Manajemen Proyek"];
         let submissions = [];
@@ -130,43 +124,6 @@
                 list.appendChild(card);
             });
         }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const sidebar = document.querySelector("#admin-sidebar .sidebar");
-            const main = document.querySelector(".main-content");
-            if (!sidebar || !main) return;
-
-            const toggle = document.createElement("button");
-            toggle.className = "admin-mobile-toggle";
-            toggle.type = "button";
-            toggle.setAttribute("aria-controls", "admin-sidebar");
-            toggle.setAttribute("aria-expanded", "false");
-            toggle.setAttribute("aria-label", "Buka menu admin");
-            toggle.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
-            main.prepend(toggle);
-
-            const backdrop = document.createElement("button");
-            backdrop.className = "admin-mobile-backdrop";
-            backdrop.type = "button";
-            backdrop.setAttribute("aria-label", "Tutup menu admin");
-            document.body.appendChild(backdrop);
-
-            function setMenuOpen(open) {
-                document.body.classList.toggle("admin-menu-open", open);
-                toggle.setAttribute("aria-expanded", String(open));
-                toggle.setAttribute("aria-label", open ? "Tutup menu admin" : "Buka menu admin");
-                toggle.innerHTML = '<i class="fa-solid fa-' + (open ? "xmark" : "bars") + '" aria-hidden="true"></i>';
-            }
-
-            toggle.addEventListener("click", function() {
-                setMenuOpen(!document.body.classList.contains("admin-menu-open"));
-            });
-            backdrop.addEventListener("click", function() { setMenuOpen(false); });
-            sidebar.querySelectorAll("a").forEach(link => link.addEventListener("click", function() { setMenuOpen(false); }));
-            document.addEventListener("keydown", function(event) {
-                if (event.key === "Escape") setMenuOpen(false);
-            });
-        });
 
         fetch("../tugas_admin_api.php?t=" + Date.now(), { credentials: "same-origin", cache: "no-store" })
             .then(response => {

@@ -3,96 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Latihan - BIM Learn</title>
-    <link rel="stylesheet" href="../style.css">
+    <title>Latihan BIM - BIM Learn</title>
+    <link rel="stylesheet" href="../style.css?v=20261104-responsive">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .quiz-header { margin-bottom: 25px; }
-        .quiz-header h1 { color: #1e293b; font-size: 28px; margin: 0 0 8px; }
+        .quiz-container { max-width: 860px; margin: 0 auto; }
+        
+        /* Header */
+        .quiz-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; gap: 15px; }
+        .quiz-header h1 { color: #1e293b; font-size: 26px; margin: 0 0 6px; display: flex; align-items: center; gap: 10px; }
         .quiz-header p { color: #64748b; font-size: 14px; margin: 0; }
-        .quiz-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 25px; max-width: 760px; }
-        .question { border-bottom: 1px solid #e2e8f0; padding: 0 0 22px; margin-bottom: 22px; }
-        .question:last-of-type { border-bottom: 0; }
-        .question h2 { color: #1e293b; font-size: 16px; margin: 0 0 14px; }
-        .answer { display: flex; align-items: center; color: #475569; font-size: 14px; margin: 10px 0; cursor: pointer; }
-        .answer input { margin-right: 10px; accent-color: #2563eb; cursor: pointer; }
-        .quiz-button { background: #2563eb; color: white; border: 0; border-radius: 8px; padding: 11px 16px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
-        .quiz-button:hover { background: #1d4ed8; }
-        #quiz-result { color: #1d4ed8; font-size: 15px; font-weight: 600; margin-top: 18px; }
+        
+        /* Module Tabs */
+        .module-tabs { display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
+        .tab-btn { background: #white; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #475569; cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: all 0.2s; }
+        .tab-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+        .tab-btn.active { background: #2563eb; color: white; border-color: #2563eb; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); }
+
+        /* Progress Bar Card */
+        .quiz-progress-box { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03); }
+        .quiz-progress-head { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 8px; }
+        .quiz-progress-track { height: 8px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
+        .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #3b82f6); width: 0%; transition: width 0.3s ease; border-radius: inherit; }
+
+        /* Soal Cards */
+        .quiz-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03); }
+        .quiz-card-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+        .q-number { width: 32px; height: 32px; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+        .q-text { color: #1e293b; font-size: 15px; font-weight: 600; margin: 4px 0 0; line-height: 1.45; }
+
+        /* Custom Options (A, B, C, D) */
+        .options-list { display: grid; gap: 10px; }
+        .option-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; background: #fff; }
+        .option-item:hover { border-color: #93c5fd; background: #f8fafc; }
+        .option-item input[type="radio"] { display: none; }
+        
+        .opt-letter { width: 26px; height: 26px; border: 1.5px solid #cbd5e1; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #64748b; flex-shrink: 0; background: #f8fafc; transition: all 0.2s; }
+        .option-item input[type="radio"]:checked + .opt-letter { border-color: #2563eb; background: #2563eb; color: white; }
+        .option-item input[type="radio"]:checked ~ .opt-text { color: #1d4ed8; font-weight: 600; }
+        .option-item:has(input[type="radio"]:checked) { border-color: #2563eb; background: #eff6ff; box-shadow: 0 0 0 1px #2563eb; }
+        .opt-text { color: #334155; font-size: 13.5px; line-height: 1.4; }
+
+        /* Buttons & Results */
+        .quiz-actions { display: flex; gap: 12px; margin-top: 24px; }
+        .btn-submit { flex: 1; border: none; background: #2563eb; color: white; padding: 14px 20px; border-radius: 10px; font-size: 14.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); }
+        .btn-submit:hover { background: #1d4ed8; }
+        .btn-reset { border: 1px solid #cbd5e1; background: white; color: #475569; padding: 14px 20px; border-radius: 10px; font-size: 14.5px; font-weight: 600; cursor: pointer; }
+        .btn-reset:hover { background: #f1f5f9; }
+
+        .result-card { display: none; background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 24px; margin-top: 24px; text-align: center; box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05); animation: fadeIn 0.3s ease; }
+        .result-badge { width: 60px; height: 60px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 12px; }
+        .result-score { font-size: 32px; font-weight: 800; color: #1e293b; margin: 4px 0; }
+        .result-title { font-size: 18px; font-weight: 700; margin: 0 0 6px; }
+        .result-desc { color: #64748b; font-size: 14px; margin: 0 0 16px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 650px) {
+            .quiz-header { flex-direction: column; align-items: flex-start; }
+            .quiz-actions { flex-direction: column; }
+            .module-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .tab-btn { justify-content: center; white-space: normal; text-align: center; }
+        }
     </style>
 </head>
 <body class="student-page">
-    <aside class="sidebar">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
         <div class="logo">
-            <i class="fa-solid fa-cube" aria-hidden="true"></i>
+            <i class="fa-solid fa-cube"></i>
             <span>BIM Learn</span>
         </div>
-        <nav>
-            <ul>
-                <li><a href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i> Beranda</a></li>
-                <li><a href="modul.html"><i class="fa-solid fa-book" aria-hidden="true"></i> Modul</a></li>
-                <li><a href="latihan.html" class="active"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> Latihan</a></li>
-                <li><a href="pengumpulan-tugas.html"><i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i> Pengumpulan Tugas</a></li>
-                <li><a href="progres.html"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Progress</a></li>
-                <li><a href="profil.html"><i class="fa-solid fa-user" aria-hidden="true"></i> Profil</a></li>
-            </ul>
-        </nav>
-    </aside>
+        <ul>
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
+            <li><a href="modul.html"><i class="fa-solid fa-book"></i> Modul</a></li>
+            <li><a href="latihan.html" class="active"><i class="fa-solid fa-pen-to-square"></i> Latihan</a></li>
+            <li><a href="pengumpulan-tugas.html"><i class="fa-solid fa-file-arrow-up"></i> Pengumpulan Tugas</a></li>
+            <li><a href="progres.html"><i class="fa-solid fa-chart-line"></i> Progress</a></li>
+            <li><a href="profil.html"><i class="fa-solid fa-user"></i> Profil</a></li>
+        </ul>
+    </div>
 
+    <!-- MAIN CONTENT -->
     <main class="main-content">
-        <header class="quiz-header">
-            <h1>Latihan BIM</h1>
-            <p>Uji pemahamanmu setelah mempelajari modul.</p>
-        </header>
-
-        <form class="quiz-card" id="quiz-form">
-            <div class="question">
-                <h2>1. BIM digunakan terutama untuk...</h2>
-                <label for="q1-a" class="answer">
-                    <input type="radio" id="q1-a" name="q1" value="a"> Mengelola informasi proyek dalam satu alur kerja
-                </label>
-                <label for="q1-b" class="answer">
-                    <input type="radio" id="q1-b" name="q1" value="b"> Menggantikan seluruh tenaga kerja
-                </label>
+        <div class="quiz-container">
+            
+            <div class="quiz-header">
+                <div>
+                    <h1><i class="fa-solid fa-clipboard-question" style="color: #2563eb;"></i> Uji Pemahaman Modul</h1>
+                    <p>Pilih modul di bawah untuk mulai mengerjakan latihan soal.</p>
+                </div>
             </div>
 
-            <div class="question">
-                <h2>2. BIM 4D berkaitan dengan...</h2>
-                <label for="q2-a" class="answer">
-                    <input type="radio" id="q2-a" name="q2" value="a"> Estimasi biaya
-                </label>
-                <label for="q2-b" class="answer">
-                    <input type="radio" id="q2-b" name="q2" value="b"> Waktu dan jadwal proyek
-                </label>
+            <!-- TAB MODUL -->
+            <div class="module-tabs">
+                <button class="tab-btn active" onclick="switchModule(1)"><i class="fa-solid fa-layer-group"></i> Modul 1: Apa itu BIM?</button>
+                <button class="tab-btn" onclick="switchModule(2)"><i class="fa-solid fa-cube"></i> Modul 2: Pemodelan 3D</button>
+                <button class="tab-btn" onclick="switchModule(3)"><i class="fa-solid fa-network-wired"></i> Modul 3: Kolaborasi & CDE</button>
+                <button class="tab-btn" onclick="switchModule(4)"><i class="fa-solid fa-chart-gantt"></i> Modul 4: Manajemen Proyek</button>
             </div>
 
-            <div class="question">
-                <h2>3. Kolaborasi BIM membantu tim untuk...</h2>
-                <label for="q3-a" class="answer">
-                    <input type="radio" id="q3-a" name="q3" value="a"> Berbagi dan meninjau informasi model
-                </label>
-                <label for="q3-b" class="answer">
-                    <input type="radio" id="q3-b" name="q3" value="b"> Menghapus kebutuhan koordinasi
-                </label>
+            <!-- PROGRESS BAR -->
+            <div class="quiz-progress-box">
+                <div class="quiz-progress-head">
+                    <span id="module-title-text">Modul 1: Apa itu BIM?</span>
+                    <span id="progress-text">0 dari 5 Terjawab</span>
+                </div>
+                <div class="quiz-progress-track">
+                    <div class="quiz-progress-fill" id="progress-fill"></div>
+                </div>
             </div>
 
-            <button class="quiz-button" type="submit"><i class="fa-solid fa-check" aria-hidden="true"></i> Periksa Jawaban</button>
-            <div id="quiz-result" aria-live="polite"></div>
-        </form>
+            <!-- FORM SOAL DYNAMIC -->
+            <form id="quiz-form" onsubmit="checkQuiz(event)">
+                <div id="questions-wrapper"></div>
+
+                <div class="quiz-actions">
+                    <button type="submit" class="btn-submit"><i class="fa-solid fa-check-double"></i> Periksa Jawaban Modul Ini</button>
+                    <button type="button" class="btn-reset" onclick="resetCurrentModule()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                </div>
+            </form>
+
+            <!-- CARD HASIL -->
+            <div id="result-card" class="result-card">
+                <div id="result-badge" class="result-badge"></div>
+                <div id="result-score" class="result-score">0/100</div>
+                <h3 id="result-title" class="result-title"></h3>
+                <p id="result-desc" class="result-desc"></p>
+                <button class="btn-submit" style="display:inline-flex; width:auto; padding:10px 24px;" onclick="document.getElementById('result-card').style.display='none'">Tutup Hasil</button>
+            </div>
+
+        </div>
     </main>
 
-    <script src="../script.js?v=20261007-sidebar-flow"></script>
+    <script src="../script.js"></script>
     <script>
-        document.getElementById("quiz-form").addEventListener("submit", function(event) {
-            event.preventDefault();
-            let score = 0;
-            if (document.querySelector('input[name="q1"]:checked')?.value === "a") score++;
-            if (document.querySelector('input[name="q2"]:checked')?.value === "b") score++;
-            if (document.querySelector('input[name="q3"]:checked')?.value === "a") score++;
+        // DATA BANK SOAL PER MODUL
+        const quizData = {
+            1: {
+                title: "Modul 1: Apa itu BIM?",
+                questions: [
+                    {
+                        q: "BIM merupakan singkatan dari istilah konstruksi digital yaitu...",
+                        options: ["Building Information Modeling", "Building Integrated Management", "Basic Infrastructure Model", "Building Interactive Method"],
+                        answer: 0
+                    },
+                    {
+                        q: "Manfaat utama penerapan BIM dibandingkan dengan CAD 2D konvensional adalah...",
+                        options: ["Menghasilkan gambar cetak lebih tebal", "Mengintegrasikan data visual 3D dan informasi objek dalam satu alur kerja terpusat", "Menghilangkan total peran insinyur lapangan", "Membuat ukuran file proyek menjadi sangat kecil"],
+                        answer: 1
+                    },
+                    {
+                        q: "Dimensi BIM yang berkaitan khusus dengan simulasi waktu dan penjadwalan proyek disebut...",
+                        options: ["BIM 3D", "BIM 4D", "BIM 5D", "BIM 6D"],
+                        answer: 1
+                    },
+                    {
+                        q: "Salah satu keunggulan BIM dalam mencegah kesalahan konstruksi sejak dini adalah fitur...",
+                        options: ["Auto-Save", "Clash Detection", "Color Rendering", "File Compression"],
+                        answer: 1
+                    },
+                    {
+                        q: "Dokumen acuan yang mengatur standar pelaksanaan dan peran tim dalam proyek BIM dinamakan...",
+                        options: ["BIM Execution Plan (BEP)", "Project Cost Table", "CAD Guideline Standard", "Building Safety Manual"],
+                        answer: 0
+                    }
+                ]
+            },
+            2: {
+                title: "Modul 2: Pemodelan 3D",
+                questions: [
+                    {
+                        q: "Elemen acuan vertikal pada Autodesk Revit yang digunakan untuk menentukan tinggi acuan lantai adalah...",
+                        options: ["Grid", "Level", "Section", "Scope Box"],
+                        answer: 1
+                    },
+                    {
+                        q: "Sumbu acuan horizontal dan vertikal pada denah bangunan dalam pemodelan BIM dinamakan...",
+                        options: ["Level", "Elevation", "Grid", "Dimension"],
+                        answer: 2
+                    },
+                    {
+                        q: "Komponen berikut yang termasuk dalam kategori elemen struktur utama pada Revit adalah...",
+                        options: ["Door & Window", "Structural Column & Beam", "Furniture & Cabinet", "Curtain Wall Detail"],
+                        answer: 1
+                    },
+                    {
+                        q: "Istilah LOD (Level of Development) dalam pemodelan BIM berguna untuk mengukur...",
+                        options: ["Kecepatan render komputer", "Tingkat kedetailan geometri dan informasi objek", "Jumlah staf menggambar", "Harga lisensi perangkat lunak"],
+                        answer: 1
+                    },
+                    {
+                        q: "Pengaturan pada elemen dinding agar tingginya otomatis mengikuti lantai di atasnya menggunakan...",
+                        options: ["Base Offset", "Top Constraint", "Unconnected Height", "Wall Join"],
+                        answer: 1
+                    }
+                ]
+            },
+            3: {
+                title: "Modul 3: Kolaborasi & CDE",
+                questions: [
+                    {
+                        q: "Satu wadah terpusat berbasis cloud yang digunakan untuk berbagi dan menyimpan seluruh file proyek BIM disebut...",
+                        options: ["Common Data Environment (CDE)", "Central Database Engine", "Cloud Document File", "Computer Data Exchange"],
+                        answer: 0
+                    },
+                    {
+                        q: "Fitur kolaborasi tim pada Autodesk Revit yang memungkinkan pengerjaan bersama dalam satu file dinamakan...",
+                        options: ["Worksets", "Group Array", "Phasing", "Design Options"],
+                        answer: 0
+                    },
+                    {
+                        q: "File master yang tersimpan di server/cloud dan menjadi acuan utama seluruh tim pemodel dinamakan...",
+                        options: ["Local Model", "Central Model", "Backup Copy", "Export Model"],
+                        answer: 1
+                    },
+                    {
+                        q: "Proses mengirimkan perubahan revisi dari file lokal ke file pusat pada Revit dinamakan...",
+                        options: ["Save As", "Export DWG", "Synchronize with Central", "Reload Latest"],
+                        answer: 2
+                    },
+                    {
+                        q: "Platform manajemen konstruksi cloud milik Autodesk untuk koordinasi proyek BIM secara langsung adalah...",
+                        options: ["Autodesk BIM 360 / ACC", "Google Drive", "Dropbox Construction", "CAD Cloud Manager"],
+                        answer: 0
+                    }
+                ]
+            },
+            4: {
+                title: "Modul 4: Manajemen Proyek",
+                questions: [
+                    {
+                        q: "Penerapan BIM 5D berfokus pada analisis proyek berupa...",
+                        options: ["Simulasi pencahayaan", "Estimasi biaya dan kalkulasi anggaran (Costing)", "Analisis struktur angin", "Perencanaan pembongkaran"],
+                        answer: 1
+                    },
+                    {
+                        q: "Software yang umum digunakan untuk melakukan Clash Detection dan simulasi konstruksi 4D adalah...",
+                        options: ["Autodesk Navisworks", "Adobe Photoshop", "AutoCAD 2D", "SketchUp Viewer"],
+                        answer: 0
+                    },
+                    {
+                        q: "Manfaat utama melakukan Clash Detection antara model Struktur dan MEP adalah...",
+                        options: ["Mencetak gambar arsitektur lebih cepat", "Mencegah terjadinya bentrokan fisik pipa dengan balok beton di lapangan", "Membuat warna pipa menjadi lebih bagus", "Menurunkan harga sewa alat berat"],
+                        answer: 1
+                    },
+                    {
+                        q: "Proses perhitungan otomatis jumlah volume bahan material dari model 3D dinamakan...",
+                        options: ["Quantity Takeoff (QTO)", "Manual Counting", "Cost Estimating Sheet", "Material Rendering"],
+                        answer: 0
+                    },
+                    {
+                        q: "Simulasi 4D menghubungkan model elemen 3D bangunan dengan...",
+                        options: ["Laporan keuangan perusahaan", "Jadwal pelaksanaan proyek (Gantt Chart)", "Denah lokasi katering", "Brosur pemasaran properti"],
+                        answer: 1
+                    }
+                ]
+            }
+        };
+
+        let currentModule = 1;
+
+        function renderQuiz(modId) {
+            const wrapper = document.getElementById("questions-wrapper");
+            const data = quizData[modId];
+            wrapper.innerHTML = "";
             
-            document.getElementById("quiz-result").textContent = "Nilai latihan Anda: " + score + " / 3";
-        });
+            document.getElementById("module-title-text").textContent = data.title;
+            const letters = ["A", "B", "C", "D"];
+
+            data.questions.forEach((qObj, index) => {
+                const card = document.createElement("article");
+                card.className = "quiz-card";
+
+                let optionsHTML = "";
+                qObj.options.forEach((optText, optIdx) => {
+                    optionsHTML += `
+                        <label class="option-item">
+                            <input type="radio" name="q_${index}" value="${optIdx}" onchange="updateProgress()">
+                            <span class="opt-letter">${letters[optIdx]}</span>
+                            <span class="opt-text">${optText}</span>
+                        </label>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="quiz-card-head">
+                        <div class="q-number">${index + 1}</div>
+                        <h3 class="q-text">${qObj.q}</h3>
+                    </div>
+                    <div class="options-list">${optionsHTML}</div>
+                `;
+                wrapper.appendChild(card);
+            });
+
+            updateProgress();
+            document.getElementById("result-card").style.display = "none";
+        }
+
+        function switchModule(modId) {
+            currentModule = modId;
+            const tabs = document.querySelectorAll(".tab-btn");
+            tabs.forEach((btn, idx) => {
+                btn.classList.toggle("active", idx + 1 === modId);
+            });
+            renderQuiz(modId);
+        }
+
+        function updateProgress() {
+            const total = quizData[currentModule].questions.length;
+            let answered = 0;
+            for (let i = 0; i < total; i++) {
+                if (document.querySelector(`input[name="q_${i}"]:checked`)) {
+                    answered++;
+                }
+            }
+            const percent = (answered / total) * 100;
+            document.getElementById("progress-fill").style.width = percent + "%";
+            document.getElementById("progress-text").textContent = `${answered} dari ${total} Terjawab`;
+        }
+
+        function resetCurrentModule() {
+            document.getElementById("quiz-form").reset();
+            updateProgress();
+            document.getElementById("result-card").style.display = "none";
+        }
+
+        function checkQuiz(e) {
+            e.preventDefault();
+            const questions = quizData[currentModule].questions;
+            const total = questions.length;
+            let correctCount = 0;
+            let answeredCount = 0;
+
+            questions.forEach((qObj, idx) => {
+                const selected = document.querySelector(`input[name="q_${idx}"]:checked`);
+                if (selected) {
+                    answeredCount++;
+                    if (parseInt(selected.value) === qObj.answer) {
+                        correctCount++;
+                    }
+                }
+            });
+
+            if (answeredCount < total) {
+                alert(`Harap selesaikan seluruh ${total} soal pada modul ini sebelum memeriksa jawaban!`);
+                return;
+            }
+
+            const score = Math.round((correctCount / total) * 100);
+            const resultCard = document.getElementById("result-card");
+            const resultBadge = document.getElementById("result-badge");
+            const resultScore = document.getElementById("result-score");
+            const resultTitle = document.getElementById("result-title");
+            const resultDesc = document.getElementById("result-desc");
+
+            resultScore.textContent = `${score} / 100`;
+            resultCard.style.display = "block";
+
+            if (score >= 80) {
+                resultBadge.style.background = "#dcfce7";
+                resultBadge.style.color = "#15803d";
+                resultBadge.innerHTML = '<i class="fa-solid fa-medal"></i>';
+                resultTitle.textContent = "Luar Biasa! Pemahaman Sempurna";
+                resultDesc.textContent = `Kamu berhasil menjawab ${correctCount} dari ${total} soal dengan benar pada ${quizData[currentModule].title}. Silakan beralih ke modul berikutnya!`;
+            } else {
+                resultBadge.style.background = "#fef9c3";
+                resultBadge.style.color = "#a16207";
+                resultBadge.innerHTML = '<i class="fa-solid fa-book-open"></i>';
+                resultTitle.textContent = "Perlu Ditinjau Kembali";
+                resultDesc.textContent = `Kamu menjawab ${correctCount} dari ${total} soal dengan benar. Simak kembali video dan rangkuman pada ${quizData[currentModule].title} untuk hasil yang lebih baik.`;
+            }
+
+            resultCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Init pertama kali
+        renderQuiz(1);
     </script>
 </body>
 </html>

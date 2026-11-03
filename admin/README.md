@@ -24,11 +24,13 @@ Tabel `admin`, `materi`, dan `progres_siswa` dibuat otomatis saat endpoint aplik
 - `admin/login.html`: login guru
 - `admin/dashboard.html`: ringkasan dashboard guru
 - `admin/materi.html`: tambah, ubah, dan hapus materi
+- `admin/latihan.html`: tambah, ubah, dan hapus soal latihan siswa
 - `admin/siswa.html`: daftar dan progres siswa
 - `admin/index.html`: pengarah kompatibilitas ke dashboard
 - `admin_guard.php`: pengecekan role dan persiapan tabel
 - `admin_login.php`: autentikasi guru
 - `admin_api.php`: ringkasan siswa
 - `materi_api.php`: tambah, ubah, hapus materi
+- `latihan_api.php`: daftar dan kelola soal latihan per modul
 - `materi_public.php`: materi terpublikasi untuk siswa
 - `progress_api.php`: progress belajar per akun

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Soal Latihan - BIM Learn</title>
+    <link rel="stylesheet" href="../style.css?v=20261104-sidebar-toggle-3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:26px}
+        .admin-heading h1{color:#1e293b;font-size:27px;margin:0 0 7px}
+        .admin-heading p{color:#64748b;font-size:14px;margin:0}
+        .admin-logout{border:1px solid #fecaca;background:#fff1f2;color:#b91c1c;border-radius:8px;padding:9px 13px;cursor:pointer;font-weight:600}
+        .question-layout{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,1.2fr);gap:24px}
+        .admin-panel{background:white;border:1px solid #e2e8f0;border-radius:13px;padding:22px}
+        .admin-panel h2{color:#1e293b;font-size:17px;margin:0 0 5px}
+        .admin-panel>p{color:#64748b;font-size:13px;margin:0 0 18px}
+        .question-form{display:grid;gap:12px}
+        .question-form label{color:#334155;font-size:12px;font-weight:700}
+        .question-form input,.question-form textarea,.question-form select{width:100%;box-sizing:border-box;margin-top:6px;border:1px solid #cbd5e1;border-radius:7px;padding:10px;font:inherit;font-size:13px}
+        .question-form textarea{min-height:86px;resize:vertical}
+        .admin-primary,.admin-secondary,.table-button{border:0;border-radius:7px;cursor:pointer;font-weight:700}
+        .admin-primary{background:#2563eb;color:white;padding:10px 13px}
+        .admin-secondary{background:#f1f5f9;color:#475569;padding:10px 13px}
+        .form-actions,.question-actions{display:flex;gap:8px}
+        .question-list{display:grid;gap:10px}
+        .question-item{border:1px solid #e2e8f0;border-radius:9px;padding:13px}
+        .question-item h3{color:#1e293b;font-size:14px;margin:8px 0}
+        .question-item ol{color:#475569;font-size:12px;padding-left:22px;margin:8px 0}
+        .question-module{color:#2563eb;font-weight:700;font-size:11px}
+        .table-button{padding:6px 9px;font-size:11px}
+        .edit-button{background:#dbeafe;color:#1d4ed8}
+        .delete-button{background:#fee2e2;color:#b91c1c}
+        .admin-empty{color:#94a3b8;font-size:13px}
+        @media(max-width:850px){.question-layout{grid-template-columns:1fr}}
+        @media(max-width:650px){.admin-heading{align-items:flex-start;flex-direction:column;gap:15px}}
+    </style>
+</head>
+<body data-admin-page="latihan">
+    <div id="admin-sidebar"></div>
+    <main class="main-content">
+        <div class="admin-heading">
+            <div>
+                <h1>Kelola Soal Latihan</h1>
+                <p>Soal yang disimpan akan langsung tersedia di halaman latihan siswa.</p>
+            </div>
+            <button class="admin-logout" id="admin-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+        </div>
+        <div id="admin-notice" style="display:none"></div>
+
+        <div class="question-layout">
+            <section class="admin-panel">
+                <h2 id="form-title">Tambah Soal</h2>
+                <p>Isi pertanyaan, empat pilihan, dan jawaban yang benar.</p>
+                <form class="question-form" id="question-form">
+                    <input type="hidden" id="question-id">
+                    <label>Modul
+                        <select id="question-module" required>
+                            <option value="1">Modul 1: Apa itu BIM?</option>
+                            <option value="2">Modul 2: Pemodelan 3D</option>
+                            <option value="3">Modul 3: Kolaborasi &amp; CDE</option>
+                            <option value="4">Modul 4: Manajemen Proyek</option>
+                        </select>
+                    </label>
+                    <label>Pertanyaan<textarea id="question-text" maxlength="4000" required></textarea></label>
+                    <label>Pilihan A<input id="option-0" maxlength="1000" required></label>
+                    <label>Pilihan B<input id="option-1" maxlength="1000" required></label>
+                    <label>Pilihan C<input id="option-2" maxlength="1000" required></label>
+                    <label>Pilihan D<input id="option-3" maxlength="1000" required></label>
+                    <label>Jawaban benar
+                        <select id="question-answer" required>
+                            <option value="0">A</option>
+                            <option value="1">B</option>
+                            <option value="2">C</option>
+                            <option value="3">D</option>
+                        </select>
+                    </label>
+                    <div class="form-actions">
+                        <button class="admin-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+                        <button class="admin-secondary" id="cancel-edit" type="button" style="display:none">Batal</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="admin-panel">
+                <h2>Daftar Soal</h2>
+                <p>Soal yang digunakan pada latihan siswa.</p>
+                <div class="question-list" id="question-list"></div>
+            </section>
+        </div>
+    </main>
+    <script src="admin.js?v=20261104-sidebar-toggle-3"></script>
+    <script>
+        const moduleLabels = {
+            1: "Modul 1: Apa itu BIM?",
+            2: "Modul 2: Pemodelan 3D",
+            3: "Modul 3: Kolaborasi & CDE",
+            4: "Modul 4: Manajemen Proyek"
+        };
+        let questions = [];
+
+        async function requestQuestions() {
+            const response = await fetch("../latihan_api.php", { credentials: "same-origin", cache: "no-store" });
+            if (response.status === 403) {
+                location.href = "login.html";
+                return;
+            }
+            const result = await response.json();
+            if (!response.ok || result.status !== "success") throw new Error(result.message || "Soal gagal dimuat.");
+            questions = result.data;
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            const list = document.getElementById("question-list");
+            list.replaceChildren();
+            questions.forEach(question => {
+                const card = document.createElement("article");
+                card.className = "question-item";
+                const module = document.createElement("small");
+                module.className = "question-module";
+                module.textContent = moduleLabels[Number(question.modul)];
+                const text = document.createElement("h3");
+                text.textContent = question.pertanyaan;
+                const options = document.createElement("ol");
+                question.options.forEach((option, index) => {
+                    const item = document.createElement("li");
+                    item.textContent = option + (index === Number(question.answer) ? " (jawaban benar)" : "");
+                    options.appendChild(item);
+                });
+                const actions = document.createElement("div");
+                actions.className = "question-actions";
+                const edit = document.createElement("button");
+                edit.type = "button";
+                edit.className = "table-button edit-button";
+                edit.textContent = "Edit";
+                edit.addEventListener("click", () => editQuestion(question));
+                const remove = document.createElement("button");
+                remove.type = "button";
+                remove.className = "table-button delete-button";
+                remove.textContent = "Hapus";
+                remove.addEventListener("click", () => deleteQuestion(question.id));
+                actions.append(edit, remove);
+                card.append(module, text, options, actions);
+                list.appendChild(card);
+            });
+            if (!questions.length) {
+                const empty = document.createElement("p");
+                empty.className = "admin-empty";
+                empty.textContent = "Belum ada soal.";
+                list.appendChild(empty);
+            }
+        }
+
+        function editQuestion(question) {
+            document.getElementById("question-id").value = question.id;
+            document.getElementById("question-module").value = question.modul;
+            document.getElementById("question-text").value = question.pertanyaan;
+            question.options.forEach((option, index) => {
+                document.getElementById("option-" + index).value = option;
+            });
+            document.getElementById("question-answer").value = question.answer;
+            document.getElementById("form-title").textContent = "Edit Soal";
+            document.getElementById("cancel-edit").style.display = "inline-block";
+            document.getElementById("question-form").scrollIntoView({ behavior: "smooth" });
+        }
+
+        function resetForm() {
+            document.getElementById("question-form").reset();
+            document.getElementById("question-id").value = "";
+            document.getElementById("form-title").textContent = "Tambah Soal";
+            document.getElementById("cancel-edit").style.display = "none";
+        }
+
+        async function deleteQuestion(id) {
+            if (!confirm("Hapus soal ini?")) return;
+            try {
+                const response = await fetch("../latihan_api.php?id=" + encodeURIComponent(id), {
+                    method: "DELETE",
+                    credentials: "same-origin"
+                });
+                const result = await response.json();
+                if (response.status === 403) {
+                    location.href = "login.html";
+                    return;
+                }
+                if (!response.ok || result.status !== "success") throw new Error(result.message || "Soal gagal dihapus.");
+                showAdminNotice(result.message, "success");
+                await requestQuestions();
+            } catch (error) {
+                showAdminNotice(error.message || "Soal gagal dihapus.", "error");
+            }
+        }
+
+        document.getElementById("question-form").addEventListener("submit", async event => {
+            event.preventDefault();
+            const body = new FormData();
+            body.append("id", document.getElementById("question-id").value);
+            body.append("modul", document.getElementById("question-module").value);
+            body.append("pertanyaan", document.getElementById("question-text").value);
+            for (let index = 0; index < 4; index++) {
+                body.append("option_" + index, document.getElementById("option-" + index).value);
+            }
+            body.append("answer", document.getElementById("question-answer").value);
+
+            try {
+                const response = await fetch("../latihan_api.php", {
+                    method: "POST",
+                    body,
+                    credentials: "same-origin"
+                });
+                const result = await response.json();
+                if (response.status === 403) {
+                    location.href = "login.html";
+                    return;
+                }
+                if (!response.ok || result.status !== "success") throw new Error(result.message || "Soal gagal disimpan.");
+                showAdminNotice(result.message, "success");
+                resetForm();
+                await requestQuestions();
+            } catch (error) {
+                showAdminNotice(error.message || "Soal gagal disimpan.", "error");
+            }
+        });
+
+        document.getElementById("cancel-edit").addEventListener("click", resetForm);
+        requestQuestions().catch(error => showAdminNotice(error.message || "Soal gagal dimuat.", "error"));
+    </script>
+</body>
+</html>

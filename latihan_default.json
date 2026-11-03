@@ -1,0 +1,122 @@
+[
+    {
+        "modul": 1,
+        "pertanyaan": "BIM merupakan singkatan dari istilah konstruksi digital yaitu...",
+        "options": ["Building Information Modeling", "Building Integrated Management", "Basic Infrastructure Model", "Building Interactive Method"],
+        "answer": 0
+    },
+    {
+        "modul": 1,
+        "pertanyaan": "Manfaat utama penerapan BIM dibandingkan dengan CAD 2D konvensional adalah...",
+        "options": ["Menghasilkan gambar cetak lebih tebal", "Mengintegrasikan data visual 3D dan informasi objek dalam satu alur kerja terpusat", "Menghilangkan total peran insinyur lapangan", "Membuat ukuran file proyek menjadi sangat kecil"],
+        "answer": 1
+    },
+    {
+        "modul": 1,
+        "pertanyaan": "Dimensi BIM yang berkaitan khusus dengan simulasi waktu dan penjadwalan proyek disebut...",
+        "options": ["BIM 3D", "BIM 4D", "BIM 5D", "BIM 6D"],
+        "answer": 1
+    },
+    {
+        "modul": 1,
+        "pertanyaan": "Salah satu keunggulan BIM dalam mencegah kesalahan konstruksi sejak dini adalah fitur...",
+        "options": ["Auto-Save", "Clash Detection", "Color Rendering", "File Compression"],
+        "answer": 1
+    },
+    {
+        "modul": 1,
+        "pertanyaan": "Dokumen acuan yang mengatur standar pelaksanaan dan peran tim dalam proyek BIM dinamakan...",
+        "options": ["BIM Execution Plan (BEP)", "Project Cost Table", "CAD Guideline Standard", "Building Safety Manual"],
+        "answer": 0
+    },
+    {
+        "modul": 2,
+        "pertanyaan": "Elemen acuan vertikal pada Autodesk Revit yang digunakan untuk menentukan tinggi acuan lantai adalah...",
+        "options": ["Grid", "Level", "Section", "Scope Box"],
+        "answer": 1
+    },
+    {
+        "modul": 2,
+        "pertanyaan": "Sumbu acuan horizontal dan vertikal pada denah bangunan dalam pemodelan BIM dinamakan...",
+        "options": ["Level", "Elevation", "Grid", "Dimension"],
+        "answer": 2
+    },
+    {
+        "modul": 2,
+        "pertanyaan": "Komponen berikut yang termasuk dalam kategori elemen struktur utama pada Revit adalah...",
+        "options": ["Door & Window", "Structural Column & Beam", "Furniture & Cabinet", "Curtain Wall Detail"],
+        "answer": 1
+    },
+    {
+        "modul": 2,
+        "pertanyaan": "Istilah LOD (Level of Development) dalam pemodelan BIM berguna untuk mengukur...",
+        "options": ["Kecepatan render komputer", "Tingkat kedetailan geometri dan informasi objek", "Jumlah staf menggambar", "Harga lisensi perangkat lunak"],
+        "answer": 1
+    },
+    {
+        "modul": 2,
+        "pertanyaan": "Pengaturan pada elemen dinding agar tingginya otomatis mengikuti lantai di atasnya menggunakan...",
+        "options": ["Base Offset", "Top Constraint", "Unconnected Height", "Wall Join"],
+        "answer": 1
+    },
+    {
+        "modul": 3,
+        "pertanyaan": "Satu wadah terpusat berbasis cloud yang digunakan untuk berbagi dan menyimpan seluruh file proyek BIM disebut...",
+        "options": ["Common Data Environment (CDE)", "Central Database Engine", "Cloud Document File", "Computer Data Exchange"],
+        "answer": 0
+    },
+    {
+        "modul": 3,
+        "pertanyaan": "Fitur kolaborasi tim pada Autodesk Revit yang memungkinkan pengerjaan bersama dalam satu file dinamakan...",
+        "options": ["Worksets", "Group Array", "Phasing", "Design Options"],
+        "answer": 0
+    },
+    {
+        "modul": 3,
+        "pertanyaan": "File master yang tersimpan di server/cloud dan menjadi acuan utama seluruh tim pemodel dinamakan...",
+        "options": ["Local Model", "Central Model", "Backup Copy", "Export Model"],
+        "answer": 1
+    },
+    {
+        "modul": 3,
+        "pertanyaan": "Proses mengirimkan perubahan revisi dari file lokal ke file pusat pada Revit dinamakan...",
+        "options": ["Save As", "Export DWG", "Synchronize with Central", "Reload Latest"],
+        "answer": 2
+    },
+    {
+        "modul": 3,
+        "pertanyaan": "Platform manajemen konstruksi cloud milik Autodesk untuk koordinasi proyek BIM secara langsung adalah...",
+        "options": ["Autodesk BIM 360 / ACC", "Google Drive", "Dropbox Construction", "CAD Cloud Manager"],
+        "answer": 0
+    },
+    {
+        "modul": 4,
+        "pertanyaan": "Penerapan BIM 5D berfokus pada analisis proyek berupa...",
+        "options": ["Simulasi pencahayaan", "Estimasi biaya dan kalkulasi anggaran (Costing)", "Analisis struktur angin", "Perencanaan pembongkaran"],
+        "answer": 1
+    },
+    {
+        "modul": 4,
+        "pertanyaan": "Software yang umum digunakan untuk melakukan Clash Detection dan simulasi konstruksi 4D adalah...",
+        "options": ["Autodesk Navisworks", "Adobe Photoshop", "AutoCAD 2D", "SketchUp Viewer"],
+        "answer": 0
+    },
+    {
+        "modul": 4,
+        "pertanyaan": "Manfaat utama melakukan Clash Detection antara model Struktur dan MEP adalah...",
+        "options": ["Mencetak gambar arsitektur lebih cepat", "Mencegah terjadinya bentrokan fisik pipa dengan balok beton di lapangan", "Membuat warna pipa menjadi lebih bagus", "Menurunkan harga sewa alat berat"],
+        "answer": 1
+    },
+    {
+        "modul": 4,
+        "pertanyaan": "Proses perhitungan otomatis jumlah volume bahan material dari model 3D dinamakan...",
+        "options": ["Quantity Takeoff (QTO)", "Manual Counting", "Cost Estimating Sheet", "Material Rendering"],
+        "answer": 0
+    },
+    {
+        "modul": 4,
+        "pertanyaan": "Simulasi 4D menghubungkan model elemen 3D bangunan dengan...",
+        "options": ["Laporan keuangan perusahaan", "Jadwal pelaksanaan proyek (Gantt Chart)", "Denah lokasi katering", "Brosur pemasaran properti"],
+        "answer": 1
+    }
+]

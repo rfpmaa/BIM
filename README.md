@@ -24,12 +24,14 @@ BIM/
 |  |- login.html         Login guru
 |  |- dashboard.html     Ringkasan dashboard
 |  |- materi.html        Kelola materi
+|  |- latihan.html       Kelola soal latihan
 |  |- tugas.html         Lihat file tugas siswa
 |  |- siswa.html         Lihat progres siswa
 |  `- admin.js           Navigasi dan fungsi bersama admin
 |- style.css             Gaya bersama halaman siswa dan admin
 |- script.js             Fungsi bersama halaman siswa
 |- *_api.php             Endpoint data aplikasi
+|- latihan_default.json  Soal bawaan untuk pengisian awal database
 |- login.php             Endpoint login siswa
 |- register.php          Endpoint registrasi
 |- logout.php            Endpoint logout
