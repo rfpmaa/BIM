@@ -29,6 +29,20 @@ function ensureApplicationTables($conn) {
             progress TINYINT UNSIGNED NOT NULL DEFAULT 0,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (user_id, modul)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+        'capaian_pembelajaran' => "CREATE TABLE IF NOT EXISTS `capaian_pembelajaran` (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            no_soal INT UNSIGNED NOT NULL,
+            capaian_pembelajaran TEXT NOT NULL,
+            tujuan_pembelajaran TEXT NOT NULL,
+            kriteria_ketercapaian TEXT NOT NULL,
+            kemampuan_kognitif VARCHAR(2) NOT NULL,
+            tingkat_kesukaran VARCHAR(2) NOT NULL,
+            skor DECIMAL(8,2) UNSIGNED NOT NULL DEFAULT 0,
+            published TINYINT(1) NOT NULL DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_capaian_no_soal (no_soal)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
     ];
 

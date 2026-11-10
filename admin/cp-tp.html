@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg?v=20261110-4">
+    <title>Kelola CP &amp; TP - BIM Learn</title>
+    <link rel="stylesheet" href="../style.css?v=20261110-cp-tp-2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-heading{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:26px}
+        .admin-heading h1{color:#1e293b;font-size:27px;margin:0 0 7px}
+        .admin-heading p{color:#64748b;font-size:14px;margin:0}
+        .admin-logout{border:1px solid #fecaca;background:#fff1f2;color:#b91c1c;border-radius:8px;padding:9px 13px;cursor:pointer;font-weight:600}
+        .outcome-layout{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,1.2fr);gap:24px}
+        .admin-panel{background:white;border:1px solid #e2e8f0;border-radius:13px;padding:22px}
+        .admin-panel h2{color:#1e293b;font-size:17px;margin:0 0 5px}
+        .admin-panel>p{color:#64748b;font-size:13px;margin:0 0 18px;line-height:1.55}
+        .outcome-form{display:grid;gap:12px}
+        .outcome-form label{color:#334155;font-size:12px;font-weight:700}
+        .outcome-form input,.outcome-form textarea,.outcome-form select{width:100%;box-sizing:border-box;margin-top:6px;border:1px solid #cbd5e1;border-radius:7px;padding:10px;font:inherit;font-size:13px}
+        .outcome-form textarea{min-height:82px;resize:vertical;line-height:1.5}
+        .outcome-form input:focus,.outcome-form textarea:focus,.outcome-form select:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+        .outcome-form .publish-field{display:flex;align-items:center;gap:8px}
+        .outcome-form .publish-field input{width:auto;margin:0}
+        .outcome-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .outcome-actions,.outcome-item-actions{display:flex;gap:8px}
+        .admin-primary,.admin-secondary,.table-button{border:0;border-radius:7px;cursor:pointer;font-weight:700}
+        .admin-primary{background:#2563eb;color:white;padding:10px 13px}
+        .admin-secondary{background:#f1f5f9;color:#475569;padding:10px 13px}
+        .outcome-list{display:grid;gap:11px}
+        .outcome-item{border:1px solid #e2e8f0;border-radius:10px;padding:15px}
+        .outcome-item-heading{display:flex;justify-content:space-between;gap:12px;align-items:center}
+        .outcome-item h3{color:#1e293b;font-size:14px}
+        .outcome-item small{color:#2563eb;font-weight:700;font-size:11px}
+        .outcome-item dl{display:grid;gap:9px;margin:13px 0;color:#475569}
+        .outcome-item dt{margin-bottom:3px;color:#64748b;font-size:11px;font-weight:700}
+        .outcome-item dd{font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+        .outcome-item-actions{margin-top:12px}
+        .table-button{padding:7px 10px;font-size:11px}
+        .edit-button{background:#dbeafe;color:#1d4ed8}
+        .delete-button{background:#fee2e2;color:#b91c1c}
+        .admin-empty{color:#94a3b8;font-size:13px}
+        @media(max-width:850px){.outcome-layout{grid-template-columns:1fr}}
+        @media(max-width:650px){.admin-heading{align-items:flex-start;flex-direction:column;gap:15px}}
+        @media(max-width:420px){.outcome-form-grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body data-admin-page="cp-tp">
+    <div id="admin-sidebar"></div>
+    <main class="main-content">
+        <div class="admin-heading">
+            <div>
+                <h1>Kelola Capaian &amp; Tujuan</h1>
+                <p>Atur CP, TP, kriteria ketercapaian, kemampuan kognitif, tingkat kesukaran, dan skor.</p>
+            </div>
+            <button class="admin-logout" id="admin-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+        </div>
+        <div id="admin-notice" style="display:none"></div>
+
+        <div class="outcome-layout">
+            <section class="admin-panel">
+                <h2 id="form-title">Tambah Data CP &amp; TP</h2>
+                <p>Data yang dipublikasikan akan tampil sebagai kartu di beranda siswa.</p>
+                <form class="outcome-form" id="outcome-form">
+                    <input type="hidden" id="outcome-id">
+                    <div class="outcome-form-grid">
+                        <label>No Soal
+                            <input id="outcome-number" type="number" min="1" step="1" required>
+                        </label>
+                        <label>Skor
+                            <input id="outcome-score" type="number" min="0" max="999999.99" step="0.01" value="1" required>
+                        </label>
+                    </div>
+                    <label>Capaian Pembelajaran
+                        <textarea id="outcome-cp" maxlength="10000" required></textarea>
+                    </label>
+                    <label>Tujuan Pembelajaran
+                        <textarea id="outcome-tp" maxlength="10000" required></textarea>
+                    </label>
+                    <label>Kriteria Ketercapaian Tujuan Pembelajaran
+                        <textarea id="outcome-criteria" maxlength="10000" required></textarea>
+                    </label>
+                    <div class="outcome-form-grid">
+                        <label>Kemampuan Kognitif
+                            <select id="outcome-cognitive" required>
+                                <option value="C1">C1 - Pengetahuan</option>
+                                <option value="C2">C2 - Pemahaman</option>
+                                <option value="C3">C3 - Aplikasi</option>
+                                <option value="C4">C4 - Analisis</option>
+                                <option value="C5">C5 - Evaluasi</option>
+                                <option value="C6">C6 - Penciptaan</option>
+                            </select>
+                        </label>
+                        <label>Tingkat Kesukaran
+                            <select id="outcome-difficulty" required>
+                                <option value="Md">Md - Mudah</option>
+                                <option value="Sd">Sd - Sedang</option>
+                                <option value="Sr">Sr - Sukar</option>
+                            </select>
+                        </label>
+                    </div>
+                    <label class="publish-field"><input id="outcome-published" type="checkbox" checked> Tampilkan di beranda siswa</label>
+                    <div class="outcome-actions">
+                        <button class="admin-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+                        <button class="admin-secondary" id="cancel-edit" type="button" style="display:none">Batal</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="admin-panel">
+                <h2>Daftar CP &amp; TP</h2>
+                <p>Semua data, termasuk yang masih disimpan sebagai draft.</p>
+                <div class="outcome-list" id="outcome-list" aria-live="polite"></div>
+            </section>
+        </div>
+    </main>
+    <script src="admin.js?v=20261110-cp-tp"></script>
+    <script>
+        let outcomes = [];
+        const cognitiveLabels = {
+            C1: "Pengetahuan", C2: "Pemahaman", C3: "Aplikasi",
+            C4: "Analisis", C5: "Evaluasi", C6: "Penciptaan"
+        };
+        const difficultyLabels = { Md: "Mudah", Sd: "Sedang", Sr: "Sukar" };
+
+        async function requestOutcomes(options) {
+            const response = await fetch("../cp_tp_api.php?admin=1", options || { credentials: "same-origin", cache: "no-store" });
+            if (response.status === 403) {
+                location.href = "login.html";
+                throw new Error("Akses khusus guru diperlukan.");
+            }
+            const result = await response.json();
+            if (!response.ok || result.status !== "success") throw new Error(result.message || "Data CP & TP gagal dimuat.");
+            return result;
+        }
+
+        async function loadOutcomes() {
+            const result = await requestOutcomes();
+            outcomes = result.data;
+            renderOutcomes();
+        }
+
+        function renderOutcomes() {
+            const list = document.getElementById("outcome-list");
+            list.replaceChildren();
+            outcomes.forEach(outcome => {
+                const card = document.createElement("article");
+                card.className = "outcome-item";
+                const heading = document.createElement("div");
+                heading.className = "outcome-item-heading";
+                const title = document.createElement("h3");
+                title.textContent = "Soal " + outcome.no_soal;
+                const status = document.createElement("small");
+                status.textContent = Number(outcome.published) ? "Dipublikasikan" : "Draft";
+                heading.append(title, status);
+
+                const details = document.createElement("dl");
+                [
+                    ["Capaian Pembelajaran", outcome.capaian_pembelajaran],
+                    ["Tujuan Pembelajaran", outcome.tujuan_pembelajaran],
+                    ["Kriteria Ketercapaian Tujuan Pembelajaran", outcome.kriteria_ketercapaian],
+                    ["Kemampuan Kognitif", outcome.kemampuan_kognitif + " - " + cognitiveLabels[outcome.kemampuan_kognitif]],
+                    ["Tingkat Kesukaran", outcome.tingkat_kesukaran + " - " + difficultyLabels[outcome.tingkat_kesukaran]],
+                    ["Skor", Number(outcome.skor).toLocaleString("id-ID")]
+                ].forEach(([labelText, valueText]) => {
+                    const wrapper = document.createElement("div");
+                    const label = document.createElement("dt");
+                    label.textContent = labelText;
+                    const value = document.createElement("dd");
+                    value.textContent = valueText;
+                    wrapper.append(label, value);
+                    details.appendChild(wrapper);
+                });
+
+                const actions = document.createElement("div");
+                actions.className = "outcome-item-actions";
+                const edit = document.createElement("button");
+                edit.type = "button";
+                edit.className = "table-button edit-button";
+                edit.textContent = "Edit";
+                edit.addEventListener("click", () => editOutcome(outcome));
+                const remove = document.createElement("button");
+                remove.type = "button";
+                remove.className = "table-button delete-button";
+                remove.textContent = "Hapus";
+                remove.addEventListener("click", () => deleteOutcome(outcome.id));
+                actions.append(edit, remove);
+                card.append(heading, details, actions);
+                list.appendChild(card);
+            });
+            if (!outcomes.length) {
+                const empty = document.createElement("p");
+                empty.className = "admin-empty";
+                empty.textContent = "Belum ada data CP & TP.";
+                list.appendChild(empty);
+            }
+        }
+
+        function editOutcome(outcome) {
+            document.getElementById("outcome-id").value = outcome.id;
+            document.getElementById("outcome-number").value = outcome.no_soal;
+            document.getElementById("outcome-score").value = outcome.skor;
+            document.getElementById("outcome-cp").value = outcome.capaian_pembelajaran;
+            document.getElementById("outcome-tp").value = outcome.tujuan_pembelajaran;
+            document.getElementById("outcome-criteria").value = outcome.kriteria_ketercapaian;
+            document.getElementById("outcome-cognitive").value = outcome.kemampuan_kognitif;
+            document.getElementById("outcome-difficulty").value = outcome.tingkat_kesukaran;
+            document.getElementById("outcome-published").checked = Number(outcome.published) === 1;
+            document.getElementById("form-title").textContent = "Edit Data CP & TP";
+            document.getElementById("cancel-edit").style.display = "inline-block";
+            document.getElementById("outcome-form").scrollIntoView({ behavior: "smooth" });
+        }
+
+        function resetForm() {
+            document.getElementById("outcome-form").reset();
+            document.getElementById("outcome-id").value = "";
+            document.getElementById("outcome-score").value = "1";
+            document.getElementById("outcome-published").checked = true;
+            document.getElementById("form-title").textContent = "Tambah Data CP & TP";
+            document.getElementById("cancel-edit").style.display = "none";
+        }
+
+        async function deleteOutcome(id) {
+            if (!confirm("Hapus data CP & TP ini?")) return;
+            try {
+                await requestOutcomes({
+                    method: "DELETE",
+                    credentials: "same-origin",
+                    cache: "no-store",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: "id=" + encodeURIComponent(id)
+                });
+                showAdminNotice("Capaian dan tujuan pembelajaran dihapus.", "success");
+                await loadOutcomes();
+            } catch (error) {
+                showAdminNotice(error.message || "Data gagal dihapus.", "error");
+            }
+        }
+
+        document.getElementById("outcome-form").addEventListener("submit", async event => {
+            event.preventDefault();
+            const body = new FormData();
+            body.append("id", document.getElementById("outcome-id").value);
+            body.append("no_soal", document.getElementById("outcome-number").value);
+            body.append("skor", document.getElementById("outcome-score").value);
+            body.append("capaian_pembelajaran", document.getElementById("outcome-cp").value);
+            body.append("tujuan_pembelajaran", document.getElementById("outcome-tp").value);
+            body.append("kriteria_ketercapaian", document.getElementById("outcome-criteria").value);
+            body.append("kemampuan_kognitif", document.getElementById("outcome-cognitive").value);
+            body.append("tingkat_kesukaran", document.getElementById("outcome-difficulty").value);
+            if (document.getElementById("outcome-published").checked) body.append("published", "1");
+
+            try {
+                const result = await requestOutcomes({ method: "POST", body, credentials: "same-origin" });
+                showAdminNotice(result.message, "success");
+                resetForm();
+                await loadOutcomes();
+            } catch (error) {
+                showAdminNotice(error.message || "Data gagal disimpan.", "error");
+            }
+        });
+
+        document.getElementById("cancel-edit").addEventListener("click", resetForm);
+        loadOutcomes().catch(error => showAdminNotice(error.message || "Data CP & TP gagal dimuat.", "error"));
+    </script>
+</body>
+</html>

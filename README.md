@@ -16,6 +16,7 @@ BIM/
 |  |- modul-4.html       Detail Modul 4
 |  |- modul-detail.js    Materi dan video detail modul
 |  |- modul-detail.css   Gaya detail modul
+|  |- cp-tp.js            Muat capaian dan tujuan pembelajaran di beranda
 |  |- latihan.html       Latihan
 |  |- progres.html       Progress siswa
 |  |- profil.html        Profil siswa
@@ -24,7 +25,8 @@ BIM/
 |  |- login.html         Login guru
 |  |- dashboard.html     Ringkasan dashboard
 |  |- materi.html        Kelola materi
-|  |- latihan.html       Kelola soal latihan
+|  |- cp-tp.html         Kelola capaian dan tujuan pembelajaran
+|  |- latihan.html        Kelola soal latihan
 |  |- tugas.html         Lihat file tugas siswa
 |  |- siswa.html         Lihat progres siswa
 |  `- admin.js           Navigasi dan fungsi bersama admin
